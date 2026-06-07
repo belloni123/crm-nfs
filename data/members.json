@@ -1,0 +1,40 @@
+[
+  {
+    "email": "felipe@agenciab16.com.br",
+    "slug": "felipe-belloni",
+    "nome": "Felipe Belloni",
+    "empresa": "Agência B16",
+    "resumo": "Estrategista digital focado em transicionar da operação técnica para o posicionamento intelectual e mentoria.",
+    "metas": [
+      { "id": "rotina-fisica", "titulo": "Estruturar rotina física com persistência", "feito": false },
+      { "id": "faturamento-mensal", "titulo": "Alcançar faturamento médio mensal de R$ 20k", "feito": false },
+      { "id": "posicionamento-mentoria", "titulo": "Lançar produto de mentoria e posicionamento", "feito": false },
+      { "id": "presenca-familiar", "titulo": "Preservar presença e tempo familiar de qualidade", "feito": true }
+    ]
+  },
+  {
+    "email": "luian_menezes@hotmail.com",
+    "slug": "luian-menezes",
+    "nome": "Luian Cacciolari",
+    "empresa": "Óticas Tesouro",
+    "resumo": "Empresário do setor óptico em transição de herdeiro para dono de fato da operação.",
+    "metas": [
+      { "id": "casamento-familia", "titulo": "Casar e construir maturidade familiar", "feito": true },
+      { "id": "inspecao-lojas", "titulo": "Estruturar inspeção operacional das 8 lojas", "feito": false },
+      { "id": "recuperacao-tributaria", "titulo": "Executar revisão tributária e recuperar créditos", "feito": false },
+      { "id": "posicionamento-lider", "titulo": "Consolidar posicionamento de líder e dono na empresa", "feito": false }
+    ]
+  },
+  {
+    "email": "contato@edersonrodrigues.com.br",
+    "slug": "ederson-rodrigues",
+    "nome": "Ederson Rodrigues",
+    "empresa": "Ecossistema Edi",
+    "resumo": "Empreendedor serial focado em afunilar foco e gerar monetização em seu ecossistema de startups e marcas.",
+    "metas": [
+      { "id": "motor-receita", "titulo": "Focar em 1 motor principal de receita e gerar caixa", "feito": false },
+      { "id": "captacao-investidores", "titulo": "Estruturar método de captação de investidores", "feito": false },
+      { "id": "marca-pessoal", "titulo": "Expandir posicionamento da marca pessoal no TikTok e Reels", "feito": true }
+    ]
+  }
+]

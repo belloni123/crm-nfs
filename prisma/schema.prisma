@@ -1,0 +1,297 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id            String       @id @default(uuid())
+  name          String?
+  email         String       @unique
+  passwordHash  String
+  role          String       @default("USER") // "SUPERADMIN" or "USER"
+  createdAt         DateTime     @default(now())
+  updatedAt         DateTime     @updatedAt
+  resetToken        String?      @unique
+  resetTokenExpires DateTime?
+  memberships       Membership[]
+  activities        Activity[]
+  assignedLeads     Lead[]       @relation("LeadAssignment")
+}
+
+model Project {
+  id                       String                  @id @default(uuid())
+  name                     String
+  description              String?
+  lastAssignedCommercialId String?
+  apiKeyHash               String?
+  apiKeyPrefix             String?                 @unique
+  createdAt                DateTime                @default(now())
+  updatedAt                DateTime                @updatedAt
+  memberships              Membership[]
+  pipelines                Pipeline[]
+  leads                    Lead[]
+  tasks                    Task[]
+  tags                     Tag[]
+  webhookEndpoints         WebhookEndpoint[]
+  whatsAppInstances        WhatsAppInstance[]
+  origins                  Origin[]
+  lostStatuses             LostStatus[]
+  customFieldDefinitions   CustomFieldDefinition[]
+  forms                    Form[]
+}
+
+model Membership {
+  id                     String   @id @default(uuid())
+  role                   String   @default("MEMBER") // "PROJECT_ADMIN" or "MEMBER"
+  userId                 String
+  projectId              String
+  isDesignatedCommercial Boolean  @default(false)
+  user                   User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  project                Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+
+  @@unique([userId, projectId])
+}
+
+model Pipeline {
+  id              String          @id @default(uuid())
+  name            String
+  projectId       String
+  project         Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  stages          Stage[]
+  pipelineEntries PipelineEntry[]
+  forms           Form[]
+}
+
+model Stage {
+  id              String          @id @default(uuid())
+  name            String
+  order           Int             @default(0)
+  color           String          @default("#6D8A6C")
+  pipelineId      String
+  pipeline        Pipeline        @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  pipelineEntries PipelineEntry[]
+  forms           Form[]
+}
+
+model Origin {
+  id               String            @id @default(uuid())
+  name             String
+  projectId        String
+  project          Project           @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  leads            Lead[]
+  webhookEndpoints WebhookEndpoint[]
+  forms            Form[]
+}
+
+model LostStatus {
+  id              String          @id @default(uuid())
+  reason          String
+  projectId       String
+  project         Project         @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  pipelineEntries PipelineEntry[]
+}
+
+model Lead {
+  id                String             @id @default(uuid())
+  name              String
+  email             String?
+  phone             String?
+  company           String?
+  priority          String             @default("MEDIA")  // "BAIXA", "MEDIA", "ALTA"
+  projectId         String
+  originId          String?
+  assignedUserId    String?
+  project           Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  origin            Origin?            @relation(fields: [originId], references: [id], onDelete: SetNull)
+  assignedUser      User?              @relation("LeadAssignment", fields: [assignedUserId], references: [id], onDelete: SetNull)
+  tags              Tag[]              @relation("LeadToTag")
+  tasks             Task[]
+  activities        Activity[]
+  conversations     Conversation[]
+  customFieldValues CustomFieldValue[]
+  pipelineEntries   PipelineEntry[]
+  createdAt         DateTime           @default(now())
+  updatedAt         DateTime           @updatedAt
+  utmSource         String?
+  utmMedium         String?
+  utmCampaign       String?
+  utmContent        String?
+  utmTerm           String?
+  referrer          String?
+  landingPage       String?
+}
+
+model PipelineEntry {
+  id           String      @id @default(uuid())
+  leadId       String
+  lead         Lead        @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  pipelineId   String
+  pipeline     Pipeline    @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  stageId      String
+  stage        Stage       @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  value        Float       @default(0.0)
+  status       String      @default("ACTIVE") // "ACTIVE", "ARCHIVED", "LOST"
+  lostStatusId String?
+  lostStatus   LostStatus? @relation(fields: [lostStatusId], references: [id], onDelete: SetNull)
+  createdAt    DateTime    @default(now())
+  updatedAt    DateTime    @updatedAt
+
+  @@unique([leadId, pipelineId])
+}
+
+model CustomFieldDefinition {
+  id         String             @id @default(uuid())
+  name       String
+  type       String             // "TEXT", "NUMBER", "SELECT"
+  entityType String             @default("LEAD") // "LEAD" or "OPPORTUNITY"
+  options    String?            // JSON string of options for SELECT
+  projectId  String
+  project    Project            @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  values     CustomFieldValue[]
+  formFields FormField[]
+}
+
+model CustomFieldValue {
+  id                String                @id @default(uuid())
+  fieldDefinitionId String
+  definition        CustomFieldDefinition @relation(fields: [fieldDefinitionId], references: [id], onDelete: Cascade)
+  leadId            String
+  lead              Lead                  @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  value             String
+}
+
+model Tag {
+  id        String   @id @default(uuid())
+  name      String
+  color     String   @default("#6D8A6C")
+  projectId String
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  leads     Lead[]   @relation("LeadToTag")
+}
+
+model Task {
+  id          String    @id @default(uuid())
+  title       String
+  description String?
+  dueDate     DateTime?
+  status      String    @default("PENDING") // "PENDING", "IN_PROGRESS", "COMPLETED"
+  leadId      String?
+  projectId   String
+  lead        Lead?     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  project     Project   @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+}
+
+model Activity {
+  id        String   @id @default(uuid())
+  type      String   @default("LOG") // "LOG", "COMMENT", "STATUS_CHANGE"
+  content   String
+  leadId    String
+  userId    String?
+  lead      Lead     @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  user      User?    @relation(fields: [userId], references: [id], onDelete: SetNull)
+  createdAt DateTime @default(now())
+}
+
+model WebhookEndpoint {
+  id            String       @id @default(uuid())
+  name          String
+  token         String       @unique
+  targetStageId String
+  projectId     String
+  originId      String?
+  project       Project      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  origin        Origin?      @relation(fields: [originId], references: [id], onDelete: SetNull)
+  fieldMapping  String       @default("{}") // JSON string of field mappings
+  webhookLogs   WebhookLog[]
+  createdAt     DateTime     @default(now())
+}
+
+model WebhookLog {
+  id           String          @id @default(uuid())
+  webhookId    String
+  webhook      WebhookEndpoint @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  payload      String
+  status       String          @default("SUCCESS") // "SUCCESS" or "ERROR"
+  errorDetails String?
+  createdAt    DateTime        @default(now())
+}
+
+model WhatsAppInstance {
+  id           String         @id @default(uuid())
+  name         String
+  instanceName String         @unique
+  token        String?
+  status       String         @default("DISCONNECTED") // "CONNECTED", "DISCONNECTED"
+  type         String         @default("WHATSAPP") // Preparado para canais futuros
+  projectId    String
+  project      Project        @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  conversations Conversation[]
+  createdAt    DateTime       @default(now())
+}
+
+model Conversation {
+  id            String           @id @default(uuid())
+  whatsappId    String           // phone number
+  name          String
+  lastMessageAt DateTime         @default(now())
+  leadId        String?
+  lead          Lead?            @relation(fields: [leadId], references: [id], onDelete: SetNull)
+  instanceId    String
+  instance      WhatsAppInstance @relation(fields: [instanceId], references: [id], onDelete: Cascade)
+  messages      Message[]
+
+  @@unique([whatsappId, instanceId])
+}
+
+model Message {
+  id             String       @id @default(uuid())
+  remoteId       String?
+  content        String
+  direction      String       // "INBOUND" or "OUTBOUND"
+  status         String       @default("SENT") // "SENT", "DELIVERED", "READ"
+  messageType    String       @default("TEXT") // "TEXT", "IMAGE", "DOCUMENT", "AUDIO"
+  mediaUrl       String?      // URL para arquivos de mídia
+  senderName     String?
+  conversationId String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime     @default(now())
+}
+
+model Form {
+  id             String      @id @default(uuid())
+  name           String
+  token          String      @unique
+  projectId      String
+  project        Project     @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  pipelineId     String
+  pipeline       Pipeline    @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+  stageId        String
+  stage          Stage       @relation(fields: [stageId], references: [id], onDelete: Cascade)
+  originId       String?
+  origin         Origin?     @relation(fields: [originId], references: [id], onDelete: SetNull)
+  successMessage String      @default("Formulário enviado com sucesso!")
+  redirectUrl    String?
+  isActive       Boolean     @default(true)
+  fields         FormField[]
+  createdAt      DateTime    @default(now())
+  updatedAt      DateTime    @updatedAt
+}
+
+model FormField {
+  id                      String                 @id @default(uuid())
+  formId                  String
+  form                    Form                   @relation(fields: [formId], references: [id], onDelete: Cascade)
+  type                    String                 // "SYSTEM" or "CUSTOM"
+  fieldName               String                 // "name", "email", "phone" for SYSTEM
+  customFieldDefinitionId String?
+  customFieldDefinition   CustomFieldDefinition? @relation(fields: [customFieldDefinitionId], references: [id], onDelete: SetNull)
+  label                   String
+  required                Boolean                @default(false)
+  order                   Int                    @default(0)
+}
