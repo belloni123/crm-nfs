@@ -1,9 +1,9 @@
-FROM node:20-alpine
+FROM node:20-slim
 
 WORKDIR /app
 
-# Instala ferramentas necessárias para compilar pacotes nativos se houver
-RUN apk add --no-cache libc6-compat python3 make g++
+# Instala openssl e ferramentas essenciais para compilação
+RUN apt-get update -y && apt-get install -y openssl python3 make g++ && rm -rf /var/lib/apt/lists/*
 
 # Copia arquivos de definição de dependências
 COPY package.json package-lock.json* ./
