@@ -137,15 +137,15 @@ export function LoginForm() {
             >
               {/* Título com Tracking Reveal */}
               <motion.h1
-                initial={{ letterSpacing: '0.25em', opacity: 0 }}
-                animate={{ letterSpacing: '0.05em', opacity: 1 }}
+                initial={{ letterSpacing: '0.05em', opacity: 0 }}
+                animate={{ letterSpacing: '-0.02em', opacity: 1 }}
                 transition={{ duration: 1, ease: 'easeOut' }}
-                className="text-2xl font-bold text-white mb-2 font-display text-center"
+                className="text-2xl font-extrabold text-white mb-2 font-display text-center uppercase tracking-tight"
               >
-                No Front Money
+                NO FRONT MONEY
               </motion.h1>
-              <p className="text-sm text-text-secondary text-center mb-8">
-                Entre com as suas credenciais de acesso.
+              <p className="text-sm text-text-secondary text-center mb-8 font-medium">
+                Chegou a hora de vender!
               </p>
 
               <form onSubmit={handleSubmit} className="w-full flex flex-col gap-5">
