@@ -38,7 +38,8 @@ import {
   CheckCircle2,
   Circle,
   FileText,
-  MessageSquare
+  MessageSquare,
+  ExternalLink
 } from 'lucide-react';
 
 interface Pipeline {
@@ -936,7 +937,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
       ========================================== */}
       {selectedLeadId && leadDetail && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-40 flex items-center justify-center p-4">
-          <div className="bg-bg-elevated border border-border-strong w-full max-w-4xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+          <div className="bg-bg-elevated border border-border-strong w-full max-w-6xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl flex flex-col">
             
             {/* Header do Modal */}
             <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.01)] flex justify-between items-center flex-shrink-0">
@@ -968,203 +969,8 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
             {/* Corpo do Modal */}
             <div className="flex-1 overflow-hidden flex flex-col md:flex-row min-h-0">
               
-              {/* Coluna Central 1: Participações em Funis */}
-              <div className="w-full md:w-80 border-b md:border-b-0 md:border-r border-[rgba(255,255,255,0.05)] p-6 overflow-y-auto space-y-6 flex-shrink-0 bg-[rgba(5,5,5,0.05)] custom-scrollbar">
-                <h3 className="text-xs font-bold text-accent uppercase tracking-wider mb-2 flex items-center gap-1.5">
-                  Participações em Funis
-                </h3>
-                
-                {/* Listagem de participações existentes */}
-                <div className="space-y-4">
-                  {leadDetail.pipelineEntries?.length === 0 ? (
-                    <p className="text-[10px] text-text-secondary leading-relaxed">
-                      Este lead não está participando de nenhum funil comercial atualmente.
-                    </p>
-                  ) : (
-                    leadDetail.pipelineEntries.map((entry: any) => {
-                      const pipelineObj = pipelines.find(p => p.id === entry.pipelineId);
-                      const stagesList = pipelineObj?.stages || [];
-                      
-                      return (
-                        <div key={entry.id} className="bg-[rgba(255,255,255,0.02)] border border-border-subtle p-3 rounded-lg space-y-3">
-                          <div className="flex justify-between items-center border-b border-[rgba(255,255,255,0.04)] pb-1.5">
-                            <span className="text-xs font-bold text-white truncate block max-w-[150px]">
-                              {entry.pipeline.name}
-                            </span>
-                            <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold ${
-                              entry.status === 'ACTIVE'
-                                ? 'bg-accent/15 text-accent border border-accent/20'
-                                : entry.status === 'LOST'
-                                  ? 'bg-danger/10 text-danger border border-danger/20'
-                                  : 'bg-[rgba(255,255,255,0.03)] text-text-secondary border border-border-subtle'
-                            }`}>
-                              {entry.status}
-                            </span>
-                          </div>
-
-                          <div className="grid grid-cols-1 gap-2.5 text-xs">
-                            {/* Stage Select */}
-                            <div className="flex flex-col gap-1">
-                              <label className="text-[9px] font-bold text-text-secondary uppercase">Estágio</label>
-                              <select
-                                value={entry.stageId}
-                                onChange={async (e) => {
-                                  await handleUpdatePipelineEntry(
-                                    entry.pipelineId,
-                                    e.target.value,
-                                    entry.value,
-                                    entry.status,
-                                    entry.lostStatusId
-                                  );
-                                }}
-                                className="bg-bg-base border border-border-subtle rounded px-2 py-1 text-[11px] text-white outline-none w-full"
-                              >
-                                {stagesList.map(s => (
-                                  <option key={s.id} value={s.id}>{s.name}</option>
-                                ))}
-                              </select>
-                            </div>
-
-                            {/* Value Input */}
-                            <div className="flex flex-col gap-1">
-                              <label className="text-[9px] font-bold text-text-secondary uppercase">Valor</label>
-                              <input
-                                type="number"
-                                defaultValue={entry.value}
-                                onBlur={async (e) => {
-                                  const parsedVal = parseFloat(e.target.value) || 0;
-                                  if (parsedVal !== entry.value) {
-                                    await handleUpdatePipelineEntry(
-                                      entry.pipelineId,
-                                      entry.stageId,
-                                      parsedVal,
-                                      entry.status,
-                                      entry.lostStatusId
-                                    );
-                                  }
-                                }}
-                                className="bg-bg-base border border-border-subtle rounded px-2 py-1 text-[11px] text-white outline-none w-full"
-                              />
-                            </div>
-
-                            {/* Status select */}
-                            <div className="flex flex-col gap-1">
-                              <label className="text-[9px] font-bold text-text-secondary uppercase">Status</label>
-                              <select
-                                value={entry.status}
-                                onChange={async (e) => {
-                                  const newStatus = e.target.value;
-                                  const defaultLostReasonId = lostStatuses[0]?.id || null;
-                                  await handleUpdatePipelineEntry(
-                                    entry.pipelineId,
-                                    entry.stageId,
-                                    entry.value,
-                                    newStatus,
-                                    newStatus === 'LOST' ? defaultLostReasonId : null
-                                  );
-                                }}
-                                className="bg-bg-base border border-border-subtle rounded px-2 py-1 text-[11px] text-white outline-none w-full"
-                              >
-                                <option value="ACTIVE">Ativo</option>
-                                <option value="LOST">Perdido</option>
-                                <option value="ARCHIVED">Arquivado</option>
-                              </select>
-                            </div>
-
-                            {/* Lost Reason select (if LOST) */}
-                            {entry.status === 'LOST' && (
-                              <div className="flex flex-col gap-1">
-                                <label className="text-[9px] font-bold text-text-secondary uppercase">Motivo da Perda</label>
-                                <select
-                                  value={entry.lostStatusId || ''}
-                                  onChange={async (e) => {
-                                    await handleUpdatePipelineEntry(
-                                      entry.pipelineId,
-                                      entry.stageId,
-                                      entry.value,
-                                      entry.status,
-                                      e.target.value || null
-                                    );
-                                  }}
-                                  className="bg-bg-base border border-border-subtle rounded px-2 py-1 text-[11px] text-white outline-none w-full text-danger font-semibold"
-                                >
-                                  <option value="">Selecione...</option>
-                                  {lostStatuses.map(ls => (
-                                    <option key={ls.id} value={ls.id}>{ls.reason}</option>
-                                  ))}
-                                </select>
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      );
-                    })
-                  )}
-                </div>
-
-                {/* Formulário para adicionar a outro funil */}
-                {availablePipelines.length > 0 && (
-                  <div className="border-t border-[rgba(255,255,255,0.05)] pt-4 mt-4 space-y-3">
-                    <h4 className="text-[11px] font-bold text-white uppercase tracking-wider">Adicionar a outro Funil</h4>
-                    <form onSubmit={handleAddPipelineEntry} className="space-y-2.5">
-                      <div className="flex flex-col gap-1 text-[11px]">
-                        <label className="font-semibold text-text-secondary">Funil</label>
-                        <select
-                          required
-                          value={addPipelineId}
-                          onChange={(e) => setAddPipelineId(e.target.value)}
-                          className="bg-bg-base border border-border-subtle rounded px-2.5 py-1.5 text-xs text-white outline-none w-full"
-                        >
-                          <option value="">Selecione o funil...</option>
-                          {availablePipelines.map(p => (
-                            <option key={p.id} value={p.id}>{p.name}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      {addPipelineId && (
-                        <>
-                          <div className="flex flex-col gap-1 text-[11px]">
-                            <label className="font-semibold text-text-secondary">Estágio Inicial</label>
-                            <select
-                              required
-                              value={addStageId}
-                              onChange={(e) => setAddStageId(e.target.value)}
-                              className="bg-bg-base border border-border-subtle rounded px-2.5 py-1.5 text-xs text-white outline-none w-full"
-                            >
-                              {pipelines.find(p => p.id === addPipelineId)?.stages.map(s => (
-                                <option key={s.id} value={s.id}>{s.name}</option>
-                              ))}
-                            </select>
-                          </div>
-
-                          <div className="flex flex-col gap-1 text-[11px]">
-                            <label className="font-semibold text-text-secondary">Valor Comercial</label>
-                            <input
-                              type="number"
-                              value={addValue}
-                              onChange={(e) => setAddValue(e.target.value)}
-                              className="bg-bg-base border border-border-subtle rounded px-2.5 py-1.5 text-xs text-white outline-none w-full"
-                            />
-                          </div>
-
-                          <button
-                            type="submit"
-                            disabled={isAddingEntry}
-                            className="w-full py-1.5 bg-accent hover:bg-accent-light disabled:bg-accent/40 disabled:text-black/60 text-black font-bold text-xs rounded transition-all cursor-pointer flex items-center justify-center gap-1"
-                          >
-                            {isAddingEntry && <Loader2 className="h-3 w-3 animate-spin" />}
-                            Vincular a Funil
-                          </button>
-                        </>
-                      )}
-                    </form>
-                  </div>
-                )}
-              </div>
-              
-              {/* Coluna Lateral: Dados do Lead */}
-              <div className="w-full md:w-80 border-b md:border-b-0 md:border-r border-[rgba(255,255,255,0.05)] p-6 overflow-y-auto space-y-6 flex-shrink-0 bg-[rgba(5,5,5,0.1)] custom-scrollbar">
+              {/* Coluna Lateral: Dados e Participações do Lead */}
+              <div className="w-full md:w-[350px] border-b md:border-b-0 md:border-r border-[rgba(255,255,255,0.05)] p-6 overflow-y-auto space-y-6 flex-shrink-0 bg-[rgba(5,5,5,0.1)] custom-scrollbar">
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <h3 className="text-xs font-bold text-accent uppercase tracking-wider">Dados do Lead</h3>
@@ -1207,20 +1013,31 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                       <div>
                         <span className="text-[10px] text-text-secondary block font-semibold">WHATSAPP</span>
                         {leadDetail.phone ? (
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-white font-medium">{leadDetail.phone}</span>
+                          <div className="flex flex-col gap-1.5 mt-1">
+                            <div className="flex items-center gap-1.5">
+                              <a
+                                href={`https://wa.me/${leadDetail.phone.replace(/\D/g, '')}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-white hover:text-accent font-medium underline inline-flex items-center gap-1 transition-colors"
+                                title="Abrir conversa no WhatsApp Web/App"
+                              >
+                                {leadDetail.phone}
+                                <ExternalLink className="h-3 w-3 opacity-60" />
+                              </a>
+                            </div>
                             <button
                               onClick={handleStartChat}
                               disabled={isStartingChat}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 bg-accent/20 hover:bg-accent/40 border border-accent/30 text-accent text-[10px] font-bold rounded cursor-pointer transition-all disabled:opacity-50"
-                              title="Conversar no WhatsApp"
+                              className="inline-flex items-center justify-center gap-1.5 w-full py-1.5 bg-accent/15 hover:bg-accent/35 border border-accent/25 hover:border-accent/40 text-accent text-[10px] font-bold rounded-lg cursor-pointer transition-all disabled:opacity-50"
+                              title="Conversar no CRM (Inbox)"
                             >
                               {isStartingChat ? (
-                                <Loader2 className="h-3 w-3 animate-spin" />
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
                               ) : (
-                                <MessageSquare className="h-3 w-3" />
+                                <MessageSquare className="h-3.5 w-3.5" />
                               )}
-                              Conversar
+                              Conversar no CRM
                             </button>
                           </div>
                         ) : (
@@ -1321,6 +1138,201 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                       >
                         Salvar Alterações
                       </button>
+                    </div>
+                  )}
+                </div>
+
+                {/* Participações em Funis (Incorporado) */}
+                <div className="border-t border-[rgba(255,255,255,0.05)] pt-6 space-y-4">
+                  <h3 className="text-xs font-bold text-accent uppercase tracking-wider flex items-center gap-1.5">
+                    Participações em Funis
+                  </h3>
+                  
+                  {/* Listagem de participações existentes */}
+                  <div className="space-y-4">
+                    {leadDetail.pipelineEntries?.length === 0 ? (
+                      <p className="text-[10px] text-text-secondary leading-relaxed">
+                        Este lead não está participando de nenhum funil comercial atualmente.
+                      </p>
+                    ) : (
+                      leadDetail.pipelineEntries.map((entry: any) => {
+                        const pipelineObj = pipelines.find(p => p.id === entry.pipelineId);
+                        const stagesList = pipelineObj?.stages || [];
+                        
+                        return (
+                          <div key={entry.id} className="bg-[rgba(255,255,255,0.02)] border border-border-subtle p-3 rounded-lg space-y-3">
+                            <div className="flex justify-between items-center border-b border-[rgba(255,255,255,0.04)] pb-1.5">
+                              <span className="text-xs font-bold text-white truncate block max-w-[150px]">
+                                {entry.pipeline.name}
+                              </span>
+                              <span className={`px-1.5 py-0.5 rounded text-[8px] font-bold ${
+                                entry.status === 'ACTIVE'
+                                  ? 'bg-accent/15 text-accent border border-accent/20'
+                                  : entry.status === 'LOST'
+                                    ? 'bg-danger/10 text-danger border border-danger/20'
+                                    : 'bg-[rgba(255,255,255,0.03)] text-text-secondary border border-border-subtle'
+                              }`}>
+                                {entry.status}
+                              </span>
+                            </div>
+
+                            <div className="grid grid-cols-1 gap-2.5 text-xs">
+                              {/* Stage Select */}
+                              <div className="flex flex-col gap-1">
+                                <label className="text-[9px] font-bold text-text-secondary uppercase">Estágio</label>
+                                <select
+                                  value={entry.stageId}
+                                  onChange={async (e) => {
+                                    await handleUpdatePipelineEntry(
+                                      entry.pipelineId,
+                                      e.target.value,
+                                      entry.value,
+                                      entry.status,
+                                      entry.lostStatusId
+                                    );
+                                  }}
+                                  className="bg-bg-base border border-border-subtle rounded px-2 py-1 text-[11px] text-white outline-none w-full"
+                                >
+                                  {stagesList.map(s => (
+                                    <option key={s.id} value={s.id}>{s.name}</option>
+                                  ))}
+                                </select>
+                              </div>
+
+                              {/* Value Input */}
+                              <div className="flex flex-col gap-1">
+                                <label className="text-[9px] font-bold text-text-secondary uppercase">Valor</label>
+                                <input
+                                  type="number"
+                                  defaultValue={entry.value}
+                                  onBlur={async (e) => {
+                                    const parsedVal = parseFloat(e.target.value) || 0;
+                                    if (parsedVal !== entry.value) {
+                                      await handleUpdatePipelineEntry(
+                                        entry.pipelineId,
+                                        entry.stageId,
+                                        parsedVal,
+                                        entry.status,
+                                        entry.lostStatusId
+                                      );
+                                    }
+                                  }}
+                                  className="bg-bg-base border border-border-subtle rounded px-2 py-1 text-[11px] text-white outline-none w-full"
+                                />
+                              </div>
+
+                              {/* Status select */}
+                              <div className="flex flex-col gap-1">
+                                <label className="text-[9px] font-bold text-text-secondary uppercase">Status</label>
+                                <select
+                                  value={entry.status}
+                                  onChange={async (e) => {
+                                    const newStatus = e.target.value;
+                                    const defaultLostReasonId = lostStatuses[0]?.id || null;
+                                    await handleUpdatePipelineEntry(
+                                      entry.pipelineId,
+                                      entry.stageId,
+                                      entry.value,
+                                      newStatus,
+                                      newStatus === 'LOST' ? defaultLostReasonId : null
+                                    );
+                                  }}
+                                  className="bg-bg-base border border-border-subtle rounded px-2 py-1 text-[11px] text-white outline-none w-full"
+                                >
+                                  <option value="ACTIVE">Ativo</option>
+                                  <option value="LOST">Perdido</option>
+                                  <option value="ARCHIVED">Arquivado</option>
+                                </select>
+                              </div>
+
+                              {/* Lost Reason select (if LOST) */}
+                              {entry.status === 'LOST' && (
+                                <div className="flex flex-col gap-1">
+                                  <label className="text-[9px] font-bold text-text-secondary uppercase">Motivo da Perda</label>
+                                  <select
+                                    value={entry.lostStatusId || ''}
+                                    onChange={async (e) => {
+                                      await handleUpdatePipelineEntry(
+                                        entry.pipelineId,
+                                        entry.stageId,
+                                        entry.value,
+                                        entry.status,
+                                        e.target.value || null
+                                      );
+                                    }}
+                                    className="bg-bg-base border border-border-subtle rounded px-2 py-1 text-[11px] text-white outline-none w-full text-danger font-semibold"
+                                  >
+                                    <option value="">Selecione...</option>
+                                    {lostStatuses.map(ls => (
+                                      <option key={ls.id} value={ls.id}>{ls.reason}</option>
+                                    ))}
+                                  </select>
+                                </div>
+                              )}
+                            </div>
+                          </div>
+                        );
+                      })
+                    )}
+                  </div>
+
+                  {/* Formulário para adicionar a outro funil */}
+                  {availablePipelines.length > 0 && (
+                    <div className="border-t border-[rgba(255,255,255,0.05)] pt-4 mt-4 space-y-3">
+                      <h4 className="text-[11px] font-bold text-white uppercase tracking-wider">Adicionar a outro Funil</h4>
+                      <form onSubmit={handleAddPipelineEntry} className="space-y-2.5">
+                        <div className="flex flex-col gap-1 text-[11px]">
+                          <label className="font-semibold text-text-secondary">Funil</label>
+                          <select
+                            required
+                            value={addPipelineId}
+                            onChange={(e) => setAddPipelineId(e.target.value)}
+                            className="bg-bg-base border border-border-subtle rounded px-2.5 py-1.5 text-xs text-white outline-none w-full"
+                          >
+                            <option value="">Selecione o funil...</option>
+                            {availablePipelines.map(p => (
+                              <option key={p.id} value={p.id}>{p.name}</option>
+                            ))}
+                          </select>
+                        </div>
+
+                        {addPipelineId && (
+                          <>
+                            <div className="flex flex-col gap-1 text-[11px]">
+                              <label className="font-semibold text-text-secondary">Estágio Inicial</label>
+                              <select
+                                required
+                                value={addStageId}
+                                onChange={(e) => setAddStageId(e.target.value)}
+                                className="bg-bg-base border border-border-subtle rounded px-2.5 py-1.5 text-xs text-white outline-none w-full"
+                              >
+                                {pipelines.find(p => p.id === addPipelineId)?.stages.map(s => (
+                                  <option key={s.id} value={s.id}>{s.name}</option>
+                                ))}
+                              </select>
+                            </div>
+
+                            <div className="flex flex-col gap-1 text-[11px]">
+                              <label className="font-semibold text-text-secondary">Valor Comercial</label>
+                              <input
+                                type="number"
+                                value={addValue}
+                                onChange={(e) => setAddValue(e.target.value)}
+                                className="bg-bg-base border border-border-subtle rounded px-2.5 py-1.5 text-xs text-white outline-none w-full"
+                              />
+                            </div>
+
+                            <button
+                              type="submit"
+                              disabled={isAddingEntry}
+                              className="w-full py-1.5 bg-accent hover:bg-accent-light disabled:bg-accent/40 disabled:text-black/60 text-black font-bold text-xs rounded transition-all cursor-pointer flex items-center justify-center gap-1"
+                            >
+                              {isAddingEntry && <Loader2 className="h-3 w-3 animate-spin" />}
+                              Vincular a Funil
+                            </button>
+                          </>
+                        )}
+                      </form>
                     </div>
                   )}
                 </div>

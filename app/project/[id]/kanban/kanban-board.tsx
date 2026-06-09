@@ -37,7 +37,8 @@ import {
   ChevronRight,
   FileText,
   Loader2,
-  CheckSquare
+  CheckSquare,
+  ExternalLink
 } from 'lucide-react';
 
 interface Tag {
@@ -940,7 +941,7 @@ export function KanbanBoard({
       ========================================== */}
       {selectedLeadId && leadDetail && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-40 flex items-center justify-center p-4">
-          <div className="bg-bg-elevated border border-border-strong w-full max-w-4xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl flex flex-col">
+          <div className="bg-bg-elevated border border-border-strong w-full max-w-6xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl flex flex-col">
             
             {/* Header do Modal */}
             <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.01)] flex justify-between items-center flex-shrink-0">
@@ -973,7 +974,7 @@ export function KanbanBoard({
             <div className="flex-1 overflow-hidden flex flex-col md:flex-row min-h-0">
               
               {/* Coluna Lateral: Informações do Lead */}
-              <div className="w-full md:w-80 border-b md:border-b-0 md:border-r border-[rgba(255,255,255,0.05)] p-6 overflow-y-auto space-y-6 flex-shrink-0 bg-[rgba(5,5,5,0.1)]">
+              <div className="w-full md:w-[350px] border-b md:border-b-0 md:border-r border-[rgba(255,255,255,0.05)] p-6 overflow-y-auto space-y-6 flex-shrink-0 bg-[rgba(5,5,5,0.1)] custom-scrollbar">
                 
                 {/* Informações Básicas / Form de Edição */}
                 <div className="space-y-4">
@@ -1014,20 +1015,31 @@ export function KanbanBoard({
                       <div>
                         <span className="text-[10px] text-text-secondary block font-semibold">WHATSAPP</span>
                         {leadDetail.phone ? (
-                          <div className="flex items-center gap-2 mt-1">
-                            <span className="text-white font-medium">{leadDetail.phone}</span>
+                          <div className="flex flex-col gap-1.5 mt-1">
+                            <div className="flex items-center gap-1.5">
+                              <a
+                                href={`https://wa.me/${leadDetail.phone.replace(/\D/g, '')}`}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="text-white hover:text-accent font-medium underline inline-flex items-center gap-1 transition-colors"
+                                title="Abrir conversa no WhatsApp Web/App"
+                              >
+                                {leadDetail.phone}
+                                <ExternalLink className="h-3 w-3 opacity-60" />
+                              </a>
+                            </div>
                             <button
                               onClick={handleStartChat}
                               disabled={isStartingChat}
-                              className="inline-flex items-center gap-1 px-2 py-0.5 bg-accent/20 hover:bg-accent/40 border border-accent/30 text-accent text-[10px] font-bold rounded cursor-pointer transition-all disabled:opacity-50"
-                              title="Conversar no WhatsApp"
+                              className="inline-flex items-center justify-center gap-1.5 w-full py-1.5 bg-accent/15 hover:bg-accent/35 border border-accent/25 hover:border-accent/40 text-accent text-[10px] font-bold rounded-lg cursor-pointer transition-all disabled:opacity-50"
+                              title="Conversar no CRM (Inbox)"
                             >
                               {isStartingChat ? (
-                                <Loader2 className="h-3 w-3 animate-spin" />
+                                <Loader2 className="h-3.5 w-3.5 animate-spin" />
                               ) : (
-                                <MessageSquare className="h-3 w-3" />
+                                <MessageSquare className="h-3.5 w-3.5" />
                               )}
-                              Conversar
+                              Conversar no CRM
                             </button>
                           </div>
                         ) : (
