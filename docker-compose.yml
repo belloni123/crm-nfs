@@ -25,10 +25,10 @@ services:
     restart: always
     environment:
       - DATABASE_URL=postgresql://crm_user:crm_password_secure_123@postgres:5432/nfs_crm?schema=public
-      - NEXTAUTH_URL=http://localhost:3000
+      - NEXTAUTH_URL=https://crm.nofrontscale.com.br
       - NEXTAUTH_SECRET=9a8b7c6d5e4f3g2h1i0j_nfs_crm_secret_token_key_here
-      - EVOLUTION_API_URL=http://evolution:8080
-      - EVOLUTION_API_KEY=your_evolution_global_api_key
+      - EVOLUTION_API_URL=https://whats.agenciab16.com.br
+      - EVOLUTION_API_KEY=KYuBALyLzl7xbeKq4w3PUiddqVkzOj9N
     depends_on:
       postgres:
         condition: service_healthy
