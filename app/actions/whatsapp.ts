@@ -53,6 +53,7 @@ export async function createWhatsAppInstance(projectId: string, name: string, ty
           token: token,
           qrcode: true,
           sendPresence: true,
+          integration: 'WHATSAPP-BAILEYS',
         }),
       });
 
