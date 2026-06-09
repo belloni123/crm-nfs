@@ -589,7 +589,7 @@ export function KanbanBoard({
     <div className="flex-1 flex flex-col h-[calc(100vh-50px)] md:h-screen overflow-hidden">
       
       {/* Top bar do Kanban */}
-      <div className="flex justify-between items-center px-6 py-4 border-b border-[rgba(255,255,255,0.06)] bg-[rgba(5,5,5,0.2)] backdrop-blur-md">
+      <div className="flex justify-between items-center px-6 py-4 border-b border-border-subtle bg-dark-glass-2 backdrop-blur-md">
         <div>
           <h1 className="text-xl font-bold font-display text-white tracking-tight flex items-center gap-2">
             <TrendingDown className="h-5 w-5 text-accent rotate-180" />
@@ -609,7 +609,7 @@ export function KanbanBoard({
                 const found = pipelines.find(p => p.id === e.target.value);
                 if (found) setActivePipeline(found);
               }}
-              className="text-xs text-white bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-lg px-3 py-1.5 font-bold outline-none cursor-pointer focus:border-accent"
+              className="text-xs text-white bg-glass-2 border border-border-subtle rounded-lg px-3 py-1.5 font-bold outline-none cursor-pointer focus:border-accent"
             >
               {pipelines.map(p => (
                 <option key={p.id} value={p.id} className="bg-bg-elevated text-white">
@@ -618,7 +618,7 @@ export function KanbanBoard({
               ))}
             </select>
           ) : (
-            <div className="text-xs text-white bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-lg px-3 py-1.5 font-bold">
+            <div className="text-xs text-white bg-glass-2 border border-border-subtle rounded-lg px-3 py-1.5 font-bold">
               {activePipeline?.name}
             </div>
           )}
@@ -643,15 +643,15 @@ export function KanbanBoard({
                 className={`w-72 max-h-full flex flex-col bg-[rgba(10,15,11,0.2)] backdrop-blur-sm border rounded-xl transition-all duration-150 flex-shrink-0 ${
                   isOver 
                     ? 'border-accent bg-accent-glow' 
-                    : 'border-[rgba(255,255,255,0.04)]'
+                    : 'border-border-subtle'
                 }`}
               >
                 {/* Cabeçalho da coluna */}
-                <div className="p-3.5 border-b border-[rgba(255,255,255,0.04)] flex items-center justify-between">
+                <div className="p-3.5 border-b border-border-subtle flex items-center justify-between">
                   <div className="flex items-center gap-2 min-w-0">
                     <span className="h-2 w-2 rounded-full flex-shrink-0" style={{ backgroundColor: stage.color }} />
                     <h3 className="text-xs font-bold text-white truncate">{stage.name}</h3>
-                    <span className="text-[10px] text-text-secondary bg-[rgba(255,255,255,0.04)] px-2 py-0.5 rounded-full font-bold">
+                    <span className="text-[10px] text-text-secondary bg-glass-4 px-2 py-0.5 rounded-full font-bold">
                       {stageLeads.length}
                     </span>
                   </div>
@@ -668,7 +668,7 @@ export function KanbanBoard({
                       draggable
                       onDragStart={(e) => handleDragStart(e, lead.id)}
                       onClick={() => setSelectedLeadId(lead.id)}
-                      className="bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.05)] hover:border-border-glass rounded-lg p-3 cursor-grab active:cursor-grabbing transition-all duration-150 relative"
+                      className="bg-glass-2 hover:bg-glass-4 border border-border-subtle hover:border-border-glass rounded-lg p-3 cursor-grab active:cursor-grabbing transition-all duration-150 relative"
                     >
                       {/* Priority strip */}
                       <span className={`absolute top-0 left-0 bottom-0 w-1 rounded-l-lg ${
@@ -711,7 +711,7 @@ export function KanbanBoard({
 
                           <div className="flex items-center gap-2 text-[10px] text-text-secondary">
                             {lead.origin && (
-                              <span className="bg-[rgba(255,255,255,0.03)] px-1.5 py-0.5 rounded text-[9px] border border-border-subtle" title="Origem">
+                              <span className="bg-glass-3 px-1.5 py-0.5 rounded text-[9px] border border-border-subtle" title="Origem">
                                 {lead.origin.name}
                               </span>
                             )}
@@ -730,7 +730,7 @@ export function KanbanBoard({
                 {/* Botão de adicionar no final da coluna */}
                 <button
                   onClick={() => handleOpenAddModal(stage.id)}
-                  className="mx-3.5 my-3 py-1.5 border border-dashed border-[rgba(255,255,255,0.06)] hover:border-accent hover:bg-accent-glow text-[11px] font-bold text-text-secondary hover:text-accent rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-all duration-150"
+                  className="mx-3.5 my-3 py-1.5 border border-dashed border-border-subtle hover:border-accent hover:bg-accent-glow text-[11px] font-bold text-text-secondary hover:text-accent rounded-lg flex items-center justify-center gap-1 cursor-pointer transition-all duration-150"
                 >
                   <Plus className="h-3.5 w-3.5" />
                   Adicionar Lead
@@ -748,7 +748,7 @@ export function KanbanBoard({
       {showAddModal && (
         <div className="fixed inset-0 bg-black/85 backdrop-blur-sm z-50 flex items-center justify-center p-4">
           <div className="bg-bg-elevated border border-border-strong w-full max-w-lg rounded-2xl overflow-hidden shadow-2xl p-6">
-            <div className="flex justify-between items-center border-b border-[rgba(255,255,255,0.05)] pb-3 mb-4">
+            <div className="flex justify-between items-center border-b border-border-subtle pb-3 mb-4">
               <h2 className="text-lg font-bold font-display text-white">Criar Nova Oportunidade</h2>
               <button onClick={() => setShowAddModal(false)} className="text-text-secondary hover:text-white cursor-pointer">
                 <X className="h-5 w-5" />
@@ -864,7 +864,7 @@ export function KanbanBoard({
                 </div>
               </div>
 
-              <div className="flex items-center justify-end gap-3 col-span-2 pt-4 border-t border-[rgba(255,255,255,0.05)]">
+              <div className="flex items-center justify-end gap-3 col-span-2 pt-4 border-t border-border-subtle">
                 <button
                   type="button"
                   onClick={() => setShowAddModal(false)}
@@ -944,7 +944,7 @@ export function KanbanBoard({
           <div className="bg-bg-elevated border border-border-strong w-full max-w-6xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl flex flex-col">
             
             {/* Header do Modal */}
-            <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.01)] flex justify-between items-center flex-shrink-0">
+            <div className="px-6 py-4 border-b border-border-subtle bg-glass-1 flex justify-between items-center flex-shrink-0">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-lg bg-accent/15 border border-border-glass flex items-center justify-center text-accent">
                   <User className="h-4 w-4" />
@@ -974,7 +974,7 @@ export function KanbanBoard({
             <div className="flex-1 overflow-hidden flex flex-col md:flex-row min-h-0">
               
               {/* Coluna Lateral: Informações do Lead */}
-              <div className="w-full md:w-[350px] border-b md:border-b-0 md:border-r border-[rgba(255,255,255,0.05)] p-6 overflow-y-auto space-y-6 flex-shrink-0 bg-[rgba(5,5,5,0.1)] custom-scrollbar">
+              <div className="w-full md:w-[350px] border-b md:border-b-0 md:border-r border-border-subtle p-6 overflow-y-auto space-y-6 flex-shrink-0 bg-dark-glass-1 custom-scrollbar">
                 
                 {/* Informações Básicas / Form de Edição */}
                 <div className="space-y-4">
@@ -1007,7 +1007,7 @@ export function KanbanBoard({
                             ? 'bg-danger/10 text-danger border border-danger/20' 
                             : leadDetail.priority === 'MEDIA'
                               ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
-                              : 'bg-[rgba(255,255,255,0.03)] text-text-secondary border border-border-subtle'
+                              : 'bg-glass-3 text-text-secondary border border-border-subtle'
                         }`}>
                           {leadDetail.priority}
                         </span>
@@ -1146,49 +1146,49 @@ export function KanbanBoard({
 
                 {/* Rastreamento / UTM (Adendo) */}
                 {(leadDetail?.utmSource || leadDetail?.utmMedium || leadDetail?.utmCampaign || leadDetail?.utmContent || leadDetail?.utmTerm || leadDetail?.referrer || leadDetail?.landingPage) && (
-                  <div className="border-t border-[rgba(255,255,255,0.05)] pt-6 space-y-4">
+                  <div className="border-t border-border-subtle pt-6 space-y-4">
                     <h3 className="text-xs font-bold text-accent uppercase tracking-wider">Dados de Rastreamento (UTMs)</h3>
                     <div className="grid grid-cols-2 gap-3 text-xs">
                       {leadDetail.utmSource && (
                         <div className="flex flex-col gap-0.5">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">UTM Source</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.utmSource}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.utmSource}</span>
                         </div>
                       )}
                       {leadDetail.utmMedium && (
                         <div className="flex flex-col gap-0.5">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">UTM Medium</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.utmMedium}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.utmMedium}</span>
                         </div>
                       )}
                       {leadDetail.utmCampaign && (
                         <div className="flex flex-col gap-0.5">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">UTM Campaign</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.utmCampaign}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.utmCampaign}</span>
                         </div>
                       )}
                       {leadDetail.utmContent && (
                         <div className="flex flex-col gap-0.5">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">UTM Content</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.utmContent}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.utmContent}</span>
                         </div>
                       )}
                       {leadDetail.utmTerm && (
                         <div className="flex flex-col gap-0.5 col-span-2">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">UTM Term</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.utmTerm}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.utmTerm}</span>
                         </div>
                       )}
                       {leadDetail.referrer && (
                         <div className="flex flex-col gap-0.5 col-span-2">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">Referrer (Origem)</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.referrer}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.referrer}</span>
                         </div>
                       )}
                       {leadDetail.landingPage && (
                         <div className="flex flex-col gap-0.5 col-span-2">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">Landing Page</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.landingPage}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.landingPage}</span>
                         </div>
                       )}
                     </div>
@@ -1196,7 +1196,7 @@ export function KanbanBoard({
                 )}
 
                 {/* Campos Personalizados (Adendo) */}
-                <div className="border-t border-[rgba(255,255,255,0.05)] pt-6 space-y-4">
+                <div className="border-t border-border-subtle pt-6 space-y-4">
                   <h3 className="text-xs font-bold text-accent uppercase tracking-wider">Campos Personalizados</h3>
                   
                   {customFields.length === 0 ? (
@@ -1242,7 +1242,7 @@ export function KanbanBoard({
                       <button
                         onClick={handleSaveCustomFields}
                         disabled={isSavingCustomFields}
-                        className="w-full py-1.5 bg-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.06)] border border-border-subtle hover:border-text-secondary text-white font-bold text-xs rounded transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                        className="w-full py-1.5 bg-glass-3 hover:bg-[rgba(255,255,255,0.06)] border border-border-subtle hover:border-text-secondary text-white font-bold text-xs rounded transition-all cursor-pointer flex items-center justify-center gap-1.5"
                       >
                         {isSavingCustomFields && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                         Salvar Campos
@@ -1275,7 +1275,7 @@ export function KanbanBoard({
                               ? 'bg-accent/15 text-accent' 
                               : act.type === 'STATUS_CHANGE'
                                 ? 'bg-amber-500/15 text-amber-500'
-                                : 'bg-[rgba(255,255,255,0.03)] text-text-secondary'
+                                : 'bg-glass-3 text-text-secondary'
                           }`}>
                             <FileText className="h-3.5 w-3.5" />
                           </div>
@@ -1298,7 +1298,7 @@ export function KanbanBoard({
                   </div>
 
                   {/* Caixa de Novo Comentário */}
-                  <form onSubmit={handleAddComment} className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.05)] flex gap-2 flex-shrink-0">
+                  <form onSubmit={handleAddComment} className="mt-4 pt-4 border-t border-border-subtle flex gap-2 flex-shrink-0">
                     <input
                       required
                       type="text"
@@ -1361,8 +1361,8 @@ export function KanbanBoard({
                             key={task.id} 
                             className={`flex items-start gap-2.5 p-3 rounded-lg border text-xs transition-all ${
                               isCompleted 
-                                ? 'bg-[rgba(255,255,255,0.01)] border-[rgba(255,255,255,0.03)] opacity-60' 
-                                : 'bg-[rgba(255,255,255,0.02)] border-[rgba(255,255,255,0.05)] hover:border-border-glass'
+                                ? 'bg-glass-1 border-[rgba(255,255,255,0.03)] opacity-60' 
+                                : 'bg-glass-2 border-border-subtle hover:border-border-glass'
                             }`}
                           >
                             <button

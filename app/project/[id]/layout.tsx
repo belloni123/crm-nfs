@@ -17,6 +17,7 @@ import {
   HelpCircle
 } from 'lucide-react';
 import { ProjectSwitcher } from './project-switcher';
+import { ThemeToggle } from '@/components/theme-toggle';
 
 interface Props {
   children: React.ReactNode;
@@ -60,9 +61,9 @@ export default async function ProjectLayout({ children, params }: Props) {
   return (
     <div className="min-h-screen flex flex-col md:flex-row bg-transparent relative">
       {/* SIDEBAR */}
-      <aside className="w-full md:w-64 flex-shrink-0 bg-[rgba(5,5,5,0.4)] backdrop-blur-xl border-b md:border-b-0 md:border-r border-[rgba(255,255,255,0.06)] flex flex-col z-20">
+      <aside className="w-full md:w-64 flex-shrink-0 bg-dark-glass-4 backdrop-blur-xl border-b md:border-b-0 md:border-r border-border-subtle flex flex-col z-20">
         {/* Header da Sidebar com Logo e Workspace Switcher */}
-        <div className="p-6 border-b border-[rgba(255,255,255,0.06)] flex flex-col gap-4">
+        <div className="p-6 border-b border-border-subtle flex flex-col gap-4">
           <div className="flex items-center justify-between">
             <Link href="/project">
               <img
@@ -121,7 +122,7 @@ export default async function ProjectLayout({ children, params }: Props) {
           
           {/* Se for SUPERADMIN, mostra link para o painel administrativo global */}
           {user.role === 'SUPERADMIN' && (
-            <div className="pt-4 border-t border-[rgba(255,255,255,0.05)] mt-4">
+            <div className="pt-4 border-t border-border-subtle mt-4">
               <SidebarLink
                 href="/admin"
                 label="Painel Superadmin"
@@ -132,19 +133,22 @@ export default async function ProjectLayout({ children, params }: Props) {
         </nav>
 
         {/* Perfil do Usuário e Logout */}
-        <div className="p-4 border-t border-[rgba(255,255,255,0.06)] bg-[rgba(255,255,255,0.01)] flex flex-col gap-3">
-          <div className="flex items-center gap-3 px-2">
-            <div className="h-8 w-8 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-accent font-bold text-sm">
-              {(user.name || user.email).substring(0, 2).toUpperCase()}
+        <div className="p-4 border-t border-border-subtle bg-glass-1 flex flex-col gap-3">
+          <div className="flex items-center justify-between gap-3 px-2">
+            <div className="flex items-center gap-3 min-w-0">
+              <div className="h-8 w-8 rounded-full bg-accent/20 border border-accent/40 flex items-center justify-center text-accent font-bold text-sm flex-shrink-0">
+                {(user.name || user.email).substring(0, 2).toUpperCase()}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs font-semibold text-text-primary truncate">
+                  {user.name || 'Membro'}
+                </p>
+                <p className="text-[10px] text-text-secondary truncate">
+                  {user.email}
+                </p>
+              </div>
             </div>
-            <div className="flex-1 min-w-0">
-              <p className="text-xs font-semibold text-white truncate">
-                {user.name || 'Membro'}
-              </p>
-              <p className="text-[10px] text-text-secondary truncate">
-                {user.email}
-              </p>
-            </div>
+            <ThemeToggle />
           </div>
 
           <Link
@@ -176,7 +180,7 @@ function SidebarLink({ href, label, icon }: SidebarLinkProps) {
   return (
     <Link
       href={href}
-      className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm text-text-secondary hover:text-white hover:bg-[rgba(255,255,255,0.03)] border border-transparent hover:border-[rgba(255,255,255,0.04)] transition-all duration-150 font-medium"
+      className="flex items-center gap-3 px-3.5 py-2.5 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-glass-3 border border-transparent hover:border-glass-4 transition-all duration-150 font-medium"
     >
       <span className="text-text-tertiary group-hover:text-white transition-colors duration-150">
         {icon}

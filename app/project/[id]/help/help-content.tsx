@@ -333,7 +333,7 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
   return (
     <div className="p-6 md:p-8 space-y-8 max-w-6xl mx-auto">
       {/* HEADER */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-[rgba(255,255,255,0.06)] pb-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-border-subtle pb-6">
         <div>
           <h1 className="text-2xl md:text-3xl font-extrabold text-white tracking-tight font-display flex items-center gap-2">
             <HelpCircle className="h-7 w-7 text-accent" />
@@ -345,13 +345,13 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
         </div>
 
         {/* CONTROLES DE MODO */}
-        <div className="flex items-center gap-2 self-start md:self-auto bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-lg p-1">
+        <div className="flex items-center gap-2 self-start md:self-auto bg-glass-2 border border-border-subtle rounded-lg p-1">
           <button
             onClick={() => setActiveTab('interactive')}
             className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
               activeTab === 'interactive' 
                 ? 'bg-accent text-white shadow-md' 
-                : 'text-text-secondary hover:text-white hover:bg-[rgba(255,255,255,0.02)]'
+                : 'text-text-secondary hover:text-white hover:bg-glass-2'
             }`}
           >
             <Sliders className="h-3.5 w-3.5" />
@@ -362,7 +362,7 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
             className={`flex items-center gap-2 px-3 py-1.5 rounded-md text-xs font-semibold transition-all ${
               activeTab === 'raw' 
                 ? 'bg-accent text-white shadow-md' 
-                : 'text-text-secondary hover:text-white hover:bg-[rgba(255,255,255,0.02)]'
+                : 'text-text-secondary hover:text-white hover:bg-glass-2'
             }`}
           >
             <BookOpen className="h-3.5 w-3.5" />
@@ -384,7 +384,7 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
                 placeholder="Pesquisar ajuda..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 text-xs bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-lg focus:outline-none focus:border-accent text-white placeholder-text-tertiary transition-all"
+                className="w-full pl-9 pr-4 py-2 text-xs bg-glass-2 border border-border-subtle rounded-lg focus:outline-none focus:border-accent text-white placeholder-text-tertiary transition-all"
               />
             </div>
 
@@ -397,7 +397,7 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
                   className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-left text-xs font-semibold border transition-all ${
                     activeSection === sec.id
                       ? 'bg-accent/10 border-accent/30 text-white'
-                      : 'border-transparent text-text-secondary hover:text-white hover:bg-[rgba(255,255,255,0.02)]'
+                      : 'border-transparent text-text-secondary hover:text-white hover:bg-glass-2'
                   }`}
                 >
                   <span className={activeSection === sec.id ? 'text-accent' : 'text-text-secondary'}>
@@ -415,7 +415,7 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
             </div>
 
             {/* Alerta de Acesso */}
-            <div className="bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.04)] rounded-xl p-4 space-y-2">
+            <div className="bg-glass-1 border border-border-subtle rounded-xl p-4 space-y-2">
               <div className="flex items-center gap-2 text-xs font-bold text-accent">
                 <Info className="h-4 w-4" />
                 Permissões de Acesso
@@ -433,12 +433,12 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
               if (!current) return null;
 
               return (
-                <div className="bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-6 md:p-8 shadow-xl space-y-8 relative overflow-hidden backdrop-blur-xl">
+                <div className="bg-glass-1 border border-border-subtle rounded-2xl p-6 md:p-8 shadow-xl space-y-8 relative overflow-hidden backdrop-blur-xl">
                   {/* Decorativo Fundo */}
                   <div className="absolute top-0 right-0 h-40 w-40 bg-accent/5 rounded-full blur-3xl pointer-events-none" />
 
                   {/* Header da Seção */}
-                  <div className="border-b border-[rgba(255,255,255,0.05)] pb-6 space-y-2">
+                  <div className="border-b border-border-subtle pb-6 space-y-2">
                     <div className="flex items-center gap-3">
                       <div className="h-10 w-10 rounded-xl bg-accent/10 border border-accent/20 flex items-center justify-center text-accent">
                         {current.icon}
@@ -454,7 +454,7 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
                   <div className="space-y-6">
                     <h3 className="text-xs font-bold uppercase tracking-wider text-text-secondary">Procedimento Passo a Passo</h3>
                     
-                    <div className="relative pl-6 border-l border-[rgba(255,255,255,0.06)] space-y-8">
+                    <div className="relative pl-6 border-l border-border-subtle space-y-8">
                       {current.steps.map((step, idx) => {
                         const stepKey = `${current.id}-${idx}`;
                         const isChecked = checkedSteps[stepKey] || false;
@@ -482,7 +482,7 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
 
                               {/* Exemplo associado se houver */}
                               {step.example && (
-                                <div className="inline-flex items-center gap-2 bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-3 py-1.5">
+                                <div className="inline-flex items-center gap-2 bg-glass-2 border border-border-subtle rounded-md px-3 py-1.5">
                                   <span className="text-[10px] text-text-secondary font-mono">Exemplo:</span>
                                   <code className="text-xs font-mono text-accent-light font-semibold">{step.example}</code>
                                   <button
@@ -522,7 +522,7 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
 
                   {/* LINK DE AÇÃO CONTEXTUAL */}
                   {current.link && (
-                    <div className="border-t border-[rgba(255,255,255,0.05)] pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
+                    <div className="border-t border-border-subtle pt-6 flex flex-col md:flex-row items-center justify-between gap-4">
                       <div className="text-xs text-text-secondary text-center md:text-left">
                         {current.link.adminOnly ? (
                           <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold ${
@@ -533,7 +533,7 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
                             {isAdmin ? 'Você possui acesso' : 'Requer cargo de Administrador'}
                           </span>
                         ) : (
-                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-[rgba(255,255,255,0.04)] text-text-secondary border border-[rgba(255,255,255,0.06)]">
+                          <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-bold bg-glass-4 text-text-secondary border border-border-subtle">
                             Disponível para todos os níveis
                           </span>
                         )}
@@ -550,7 +550,7 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
                       ) : (
                         <button
                           disabled
-                          className="flex items-center gap-2 bg-[rgba(255,255,255,0.02)] text-text-tertiary text-xs font-bold px-4 py-2.5 border border-[rgba(255,255,255,0.04)] rounded-lg cursor-not-allowed"
+                          className="flex items-center gap-2 bg-glass-2 text-text-tertiary text-xs font-bold px-4 py-2.5 border border-border-subtle rounded-lg cursor-not-allowed"
                         >
                           Acesso Bloqueado
                         </button>
@@ -566,8 +566,8 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
 
       {/* MODO DOCUMENTO COMPLETO (RAW MARKDOWN) */}
       {activeTab === 'raw' && (
-        <div className="bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.05)] rounded-2xl p-6 md:p-10 shadow-xl backdrop-blur-xl">
-          <div className="max-w-none prose prose-invert prose-headings:font-display prose-headings:font-bold prose-h1:text-2xl prose-h2:text-lg prose-p:text-xs prose-li:text-xs prose-strong:text-white prose-code:text-accent-light prose-code:bg-[rgba(255,255,255,0.02)] prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none leading-relaxed">
+        <div className="bg-glass-1 border border-border-subtle rounded-2xl p-6 md:p-10 shadow-xl backdrop-blur-xl">
+          <div className="max-w-none prose prose-invert prose-headings:font-display prose-headings:font-bold prose-h1:text-2xl prose-h2:text-lg prose-p:text-xs prose-li:text-xs prose-strong:text-white prose-code:text-accent-light prose-code:bg-glass-2 prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:before:content-none prose-code:after:content-none leading-relaxed">
             <ReactMarkdown remarkPlugins={[remarkGfm]}>
               {markdown}
             </ReactMarkdown>

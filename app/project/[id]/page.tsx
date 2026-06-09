@@ -199,7 +199,7 @@ export default async function ProjectDashboardPage({ params }: Props) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
         
         {/* Card 1: Leads Ativos */}
-        <div className="bg-[rgba(255,255,255,0.01)] border border-border-subtle border-l-accent rounded-xl p-5 shadow-lg relative overflow-hidden group">
+        <div className="bg-glass-1 border border-border-subtle border-l-accent rounded-xl p-5 shadow-lg relative overflow-hidden group">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Leads Ativos</p>
@@ -213,7 +213,7 @@ export default async function ProjectDashboardPage({ params }: Props) {
         </div>
 
         {/* Card 2: Valor Total */}
-        <div className="bg-[rgba(255,255,255,0.01)] border border-border-subtle border-l-[#abfe37] rounded-xl p-5 shadow-lg relative overflow-hidden group">
+        <div className="bg-glass-1 border border-border-subtle border-l-[#abfe37] rounded-xl p-5 shadow-lg relative overflow-hidden group">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Valor em Pipeline</p>
@@ -229,7 +229,7 @@ export default async function ProjectDashboardPage({ params }: Props) {
         </div>
 
         {/* Card 3: Taxa de Conversão */}
-        <div className="bg-[rgba(255,255,255,0.01)] border border-border-subtle border-l-purple-500 rounded-xl p-5 shadow-lg relative overflow-hidden group">
+        <div className="bg-glass-1 border border-border-subtle border-l-purple-500 rounded-xl p-5 shadow-lg relative overflow-hidden group">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Taxa de Conversão</p>
@@ -243,7 +243,7 @@ export default async function ProjectDashboardPage({ params }: Props) {
         </div>
 
         {/* Card 4: Tarefas Pendentes */}
-        <div className="bg-[rgba(255,255,255,0.01)] border border-border-subtle border-l-orange-400 rounded-xl p-5 shadow-lg relative overflow-hidden group">
+        <div className="bg-glass-1 border border-border-subtle border-l-orange-400 rounded-xl p-5 shadow-lg relative overflow-hidden group">
           <div className="flex justify-between items-start">
             <div>
               <p className="text-[10px] font-bold text-text-secondary uppercase tracking-wider">Ações Pendentes</p>
@@ -261,7 +261,7 @@ export default async function ProjectDashboardPage({ params }: Props) {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         
         {/* Painel 1: Pipeline por Estágio (Largura 2 colunas no desktop) */}
-        <div className="lg:col-span-2 bg-[rgba(255,255,255,0.01)] border border-border-subtle rounded-xl p-6 shadow-xl flex flex-col justify-between">
+        <div className="lg:col-span-2 bg-glass-1 border border-border-subtle rounded-xl p-6 shadow-xl flex flex-col justify-between">
           <div>
             <h4 className="text-sm font-bold font-display text-white uppercase tracking-wider mb-5 flex items-center gap-2">
               <TrendingUp className="h-4 w-4 text-accent" />
@@ -286,7 +286,7 @@ export default async function ProjectDashboardPage({ params }: Props) {
                         </span>
                       </span>
                     </div>
-                    <div className="h-1.5 w-full bg-[rgba(255,255,255,0.04)] rounded-full overflow-hidden">
+                    <div className="h-1.5 w-full bg-glass-4 rounded-full overflow-hidden">
                       <div 
                         className="h-full rounded-full transition-all duration-500" 
                         style={{ 
@@ -303,7 +303,7 @@ export default async function ProjectDashboardPage({ params }: Props) {
         </div>
 
         {/* Painel 2: Origens de Leads */}
-        <div className="bg-[rgba(255,255,255,0.01)] border border-border-subtle rounded-xl p-6 shadow-xl flex flex-col justify-between">
+        <div className="bg-glass-1 border border-border-subtle rounded-xl p-6 shadow-xl flex flex-col justify-between">
           <div>
             <h4 className="text-sm font-bold font-display text-white uppercase tracking-wider mb-5 flex items-center gap-2">
               <Compass className="h-4 w-4 text-accent" />
@@ -316,7 +316,7 @@ export default async function ProjectDashboardPage({ params }: Props) {
                 originBreakdown.map((item) => (
                   <div key={item.id} className="flex items-center justify-between text-xs border-b border-[rgba(255,255,255,0.03)] pb-2 last:border-0 last:pb-0">
                     <span className="text-text-secondary">{item.name}</span>
-                    <span className="font-bold text-white bg-[rgba(255,255,255,0.03)] px-2 py-0.5 rounded border border-border-subtle">
+                    <span className="font-bold text-white bg-glass-3 px-2 py-0.5 rounded border border-border-subtle">
                       {item.count}
                     </span>
                   </div>
@@ -329,7 +329,7 @@ export default async function ProjectDashboardPage({ params }: Props) {
       </div>
 
       {/* Relatório de Perdas (Adendo) */}
-      <div className="bg-[rgba(255,255,255,0.01)] border border-border-subtle rounded-xl p-6 shadow-xl">
+      <div className="bg-glass-1 border border-border-subtle rounded-xl p-6 shadow-xl">
         <h4 className="text-sm font-bold font-display text-white uppercase tracking-wider mb-5 flex items-center gap-2">
           <Frown className="h-4 w-4 text-danger" />
           Motivos de Perda (Oportunidades Perdidas)
@@ -345,7 +345,7 @@ export default async function ProjectDashboardPage({ params }: Props) {
               {lostReasonBreakdown.map((item) => {
                 const percent = ((item.count / totalLostLeads) * 100).toFixed(0);
                 return (
-                  <div key={item.id} className="bg-[rgba(255,255,255,0.01)] border border-border-subtle rounded-lg p-4 flex flex-col justify-between gap-2">
+                  <div key={item.id} className="bg-glass-1 border border-border-subtle rounded-lg p-4 flex flex-col justify-between gap-2">
                     <div className="flex justify-between items-start gap-2">
                       <span className="text-xs font-bold text-white leading-tight">{item.reason}</span>
                       <span className="text-xs text-danger font-extrabold bg-danger/10 px-2 py-0.5 rounded-full border border-danger/20">
@@ -353,7 +353,7 @@ export default async function ProjectDashboardPage({ params }: Props) {
                       </span>
                     </div>
                     <div>
-                      <div className="h-1 w-full bg-[rgba(255,255,255,0.04)] rounded-full overflow-hidden">
+                      <div className="h-1 w-full bg-glass-4 rounded-full overflow-hidden">
                         <div className="h-full bg-danger rounded-full" style={{ width: `${percent}%` }} />
                       </div>
                       <div className="flex justify-between text-[10px] text-text-secondary mt-1">

@@ -40,7 +40,7 @@ export default async function ProjectDispatcherPage() {
   // 3. Caso o usuário não tenha nenhum projeto vinculado
   return (
     <main className="flex-1 flex flex-col items-center justify-center p-6 bg-bg-base min-h-screen text-center">
-      <div className="w-full max-w-[480px] bg-[rgba(255,255,255,0.01)] backdrop-blur-md border border-[rgba(255,255,255,0.06)] rounded-2xl p-8 shadow-2xl">
+      <div className="w-full max-w-[480px] bg-glass-1 backdrop-blur-md border border-border-subtle rounded-2xl p-8 shadow-2xl">
         <img
           src="/logo.svg"
           alt="No Front Scale Logo"
@@ -57,7 +57,7 @@ export default async function ProjectDispatcherPage() {
         <div className="flex flex-col gap-3">
           <Link
             href="/api/auth/signout"
-            className="w-full h-11 flex items-center justify-center bg-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.06)] border border-border-subtle hover:border-text-secondary text-white font-semibold rounded-lg transition-all duration-200"
+            className="w-full h-11 flex items-center justify-center bg-glass-3 hover:bg-[rgba(255,255,255,0.06)] border border-border-subtle hover:border-text-secondary text-white font-semibold rounded-lg transition-all duration-200"
           >
             Sair da Conta
           </Link>

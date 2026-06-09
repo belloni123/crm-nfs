@@ -141,7 +141,7 @@ export function TasksPanel({ projectId, initialTasks, leads }: TasksPanelProps) 
             </h2>
 
             {pendingTasks.length === 0 ? (
-              <p className="text-xs text-text-secondary py-4 bg-[rgba(255,255,255,0.01)] border border-dashed border-border-subtle rounded-xl text-center">
+              <p className="text-xs text-text-secondary py-4 bg-glass-1 border border-dashed border-border-subtle rounded-xl text-center">
                 Sem tarefas pendentes para hoje.
               </p>
             ) : (
@@ -149,7 +149,7 @@ export function TasksPanel({ projectId, initialTasks, leads }: TasksPanelProps) 
                 {pendingTasks.map((task) => (
                   <div 
                     key={task.id}
-                    className="bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.04)] border border-border-subtle hover:border-border-glass rounded-xl p-4 flex items-start gap-4 transition-all"
+                    className="bg-glass-2 hover:bg-glass-4 border border-border-subtle hover:border-border-glass rounded-xl p-4 flex items-start gap-4 transition-all"
                   >
                     <button
                       onClick={() => handleToggleStatus(task.id, task.status)}
@@ -193,7 +193,7 @@ export function TasksPanel({ projectId, initialTasks, leads }: TasksPanelProps) 
           </div>
 
           {/* Concluídas */}
-          <div className="space-y-3 pt-4 border-t border-[rgba(255,255,255,0.04)]">
+          <div className="space-y-3 pt-4 border-t border-border-subtle">
             <h2 className="text-xs font-bold text-text-secondary uppercase tracking-wider flex items-center gap-1.5">
               <CheckCircle2 className="h-4 w-4 text-text-tertiary" />
               Concluídas ({completedTasks.length})
@@ -206,7 +206,7 @@ export function TasksPanel({ projectId, initialTasks, leads }: TasksPanelProps) 
                 {completedTasks.map((task) => (
                   <div 
                     key={task.id}
-                    className="bg-[rgba(255,255,255,0.01)] border border-[rgba(255,255,255,0.03)] opacity-60 rounded-xl p-3 flex items-start gap-3 transition-all"
+                    className="bg-glass-1 border border-[rgba(255,255,255,0.03)] opacity-60 rounded-xl p-3 flex items-start gap-3 transition-all"
                   >
                     <button
                       onClick={() => handleToggleStatus(task.id, task.status)}
@@ -249,7 +249,7 @@ export function TasksPanel({ projectId, initialTasks, leads }: TasksPanelProps) 
       </div>
 
       {/* Coluna Direita: Criar Tarefa (W-80) */}
-      <div className="w-full md:w-80 flex-shrink-0 bg-[rgba(255,255,255,0.01)] border border-border-subtle rounded-2xl p-6 shadow-2xl h-fit">
+      <div className="w-full md:w-80 flex-shrink-0 bg-glass-1 border border-border-subtle rounded-2xl p-6 shadow-2xl h-fit">
         <h2 className="text-md font-bold font-display text-white mb-4 flex items-center gap-2">
           <Plus className="h-4 w-4 text-accent" />
           Agendar Nova Ação

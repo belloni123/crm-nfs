@@ -110,7 +110,7 @@ function ResetPasswordForm() {
                     disabled={isPending}
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    className="w-full pl-10 bg-[rgba(255,255,255,0.01)] border-border-subtle focus:border-accent text-white"
+                    className="w-full pl-10 bg-glass-1 border-border-subtle focus:border-accent text-white"
                   />
                 </div>
               </div>
@@ -131,7 +131,7 @@ function ResetPasswordForm() {
                     disabled={isPending}
                     value={confirmPassword}
                     onChange={(e) => setConfirmPassword(e.target.value)}
-                    className="w-full pl-10 bg-[rgba(255,255,255,0.01)] border-border-subtle focus:border-accent text-white"
+                    className="w-full pl-10 bg-glass-1 border-border-subtle focus:border-accent text-white"
                   />
                 </div>
               </div>
@@ -240,7 +240,7 @@ export default function ResetPasswordPage() {
         </div>
 
         {/* Caixa do Formulário (Glassmorphism) */}
-        <div className="w-full bg-[rgba(255,255,255,0.01)] backdrop-blur-md border border-[rgba(255,255,255,0.06)] border-l-[rgba(109,138,108,0.3)] rounded-2xl p-8 shadow-2xl overflow-hidden">
+        <div className="w-full bg-glass-1 backdrop-blur-md border border-border-subtle border-l-[rgba(109,138,108,0.3)] rounded-2xl p-8 shadow-2xl overflow-hidden">
           <React.Suspense fallback={
             <div className="flex flex-col items-center justify-center text-text-secondary text-xs gap-3">
               <Loader2 className="h-6 w-6 animate-spin text-accent" />

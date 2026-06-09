@@ -292,7 +292,7 @@ export function AdminPanel({ initialUsers, initialProjects }: AdminPanelProps) {
     <div className="flex-1 min-h-screen bg-[linear-gradient(to_bottom,rgba(5,5,5,0.8),rgba(10,20,13,0.9))] p-6 md:p-10">
       
       {/* Header do Painel */}
-      <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-[rgba(255,255,255,0.06)] pb-6">
+      <div className="max-w-6xl mx-auto flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8 border-b border-border-subtle pb-6">
         <div>
           <div className="flex items-center gap-3">
             <ShieldAlert className="h-6 w-6 text-accent" />
@@ -307,7 +307,7 @@ export function AdminPanel({ initialUsers, initialProjects }: AdminPanelProps) {
         <div className="flex items-center gap-4">
           <Link
             href="/project"
-            className="px-4 py-2 text-xs font-semibold text-text-secondary hover:text-white bg-[rgba(255,255,255,0.02)] border border-border-subtle hover:border-text-secondary rounded-lg transition-all"
+            className="px-4 py-2 text-xs font-semibold text-text-secondary hover:text-white bg-glass-2 border border-border-subtle hover:border-text-secondary rounded-lg transition-all"
           >
             Ir para Projetos
           </Link>
@@ -330,7 +330,7 @@ export function AdminPanel({ initialUsers, initialProjects }: AdminPanelProps) {
 
         {/* Abas e botão Criar */}
         <div className="flex items-center justify-between gap-4 mb-6">
-          <div className="flex bg-[rgba(255,255,255,0.01)] border border-border-subtle p-1 rounded-lg">
+          <div className="flex bg-glass-1 border border-border-subtle p-1 rounded-lg">
             <button
               onClick={() => { setActiveTab('projects'); setLinkingUserId(null); }}
               className={`flex items-center gap-2 px-4 py-2 text-xs font-bold rounded-md transition-all cursor-pointer ${
@@ -386,7 +386,7 @@ export function AdminPanel({ initialUsers, initialProjects }: AdminPanelProps) {
               projects.map((proj) => (
                 <div 
                   key={proj.id}
-                  className="bg-[rgba(255,255,255,0.01)] border border-border-subtle hover:border-[rgba(255,255,255,0.1)] rounded-2xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between"
+                  className="bg-glass-1 border border-border-subtle hover:border-border-strong rounded-2xl p-6 shadow-xl relative overflow-hidden flex flex-col justify-between"
                 >
                   <div className="mb-4">
                     <div className="flex items-start justify-between gap-4">
@@ -396,14 +396,14 @@ export function AdminPanel({ initialUsers, initialProjects }: AdminPanelProps) {
                       <div className="flex items-center gap-1.5 flex-shrink-0">
                         <button
                           onClick={() => handleOpenEditProject(proj)}
-                          className="p-1.5 text-text-secondary hover:text-white bg-[rgba(255,255,255,0.03)] border border-border-subtle rounded-md cursor-pointer"
+                          className="p-1.5 text-text-secondary hover:text-white bg-glass-3 border border-border-subtle rounded-md cursor-pointer"
                           title="Editar"
                         >
                           <Edit2 className="h-3.5 w-3.5" />
                         </button>
                         <button
                           onClick={() => handleDeleteProject(proj.id)}
-                          className="p-1.5 text-danger/80 hover:text-danger bg-[rgba(255,255,255,0.03)] border border-border-subtle rounded-md cursor-pointer"
+                          className="p-1.5 text-danger/80 hover:text-danger bg-glass-3 border border-border-subtle rounded-md cursor-pointer"
                           title="Excluir"
                         >
                           <Trash2 className="h-3.5 w-3.5" />
@@ -415,7 +415,7 @@ export function AdminPanel({ initialUsers, initialProjects }: AdminPanelProps) {
                     </p>
                   </div>
 
-                  <div className="border-t border-[rgba(255,255,255,0.04)] pt-4 flex items-center justify-between gap-4">
+                  <div className="border-t border-border-subtle pt-4 flex items-center justify-between gap-4">
                     <span className="text-[10px] text-text-tertiary">
                       Criado em {new Date(proj.createdAt).toLocaleDateString('pt-BR')}
                     </span>
@@ -442,11 +442,11 @@ export function AdminPanel({ initialUsers, initialProjects }: AdminPanelProps) {
                 <p className="text-sm text-text-secondary">Nenhum usuário cadastrado.</p>
               </div>
             ) : (
-              <div className="bg-[rgba(255,255,255,0.01)] border border-border-subtle rounded-2xl overflow-hidden shadow-xl">
+              <div className="bg-glass-1 border border-border-subtle rounded-2xl overflow-hidden shadow-xl">
                 <div className="overflow-x-auto">
                   <table className="w-full text-left border-collapse">
                     <thead>
-                      <tr className="border-b border-border-subtle bg-[rgba(255,255,255,0.01)] text-text-secondary text-xs uppercase tracking-wider">
+                      <tr className="border-b border-border-subtle bg-glass-1 text-text-secondary text-xs uppercase tracking-wider">
                         <th className="p-4 font-semibold">Nome / Email</th>
                         <th className="p-4 font-semibold">Permissão Global</th>
                         <th className="p-4 font-semibold">Projetos Vinculados</th>
@@ -455,7 +455,7 @@ export function AdminPanel({ initialUsers, initialProjects }: AdminPanelProps) {
                     </thead>
                     <tbody className="divide-y divide-[rgba(255,255,255,0.04)] text-sm">
                       {users.map((u) => (
-                        <tr key={u.id} className="hover:bg-[rgba(255,255,255,0.01)]">
+                        <tr key={u.id} className="hover:bg-glass-1">
                           <td className="p-4">
                             <div className="font-bold text-white">{u.name || 'Membro'}</div>
                             <div className="text-xs text-text-secondary">{u.email}</div>
@@ -464,7 +464,7 @@ export function AdminPanel({ initialUsers, initialProjects }: AdminPanelProps) {
                             <span className={`px-2 py-0.5 rounded text-[10px] font-bold ${
                               u.role === 'SUPERADMIN' 
                                 ? 'bg-danger/10 text-danger border border-danger/20' 
-                                : 'bg-[rgba(255,255,255,0.03)] text-text-secondary border border-border-subtle'
+                                : 'bg-glass-3 text-text-secondary border border-border-subtle'
                             }`}>
                               {u.role}
                             </span>
@@ -492,7 +492,7 @@ export function AdminPanel({ initialUsers, initialProjects }: AdminPanelProps) {
                               {linkingUserId !== u.id ? (
                                 <button
                                   onClick={() => { setLinkingUserId(u.id); setLinkProjId(''); }}
-                                  className="inline-flex items-center gap-1 text-xs text-text-secondary hover:text-white bg-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.06)] border border-border-subtle rounded-full px-2 py-0.5 cursor-pointer font-semibold"
+                                  className="inline-flex items-center gap-1 text-xs text-text-secondary hover:text-white bg-glass-3 hover:bg-[rgba(255,255,255,0.06)] border border-border-subtle rounded-full px-2 py-0.5 cursor-pointer font-semibold"
                                 >
                                   <Plus className="h-3 w-3" />
                                   Vincular Projeto
@@ -542,14 +542,14 @@ export function AdminPanel({ initialUsers, initialProjects }: AdminPanelProps) {
                             <div className="flex items-center justify-end gap-2">
                               <button
                                 onClick={() => handleOpenEditUser(u)}
-                                className="p-1.5 text-text-secondary hover:text-white bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-md cursor-pointer"
+                                className="p-1.5 text-text-secondary hover:text-white bg-glass-2 border border-border-subtle rounded-md cursor-pointer"
                                 title="Editar Usuário"
                               >
                                 <Edit2 className="h-3.5 w-3.5" />
                               </button>
                               <button
                                 onClick={() => handleDeleteUser(u.id)}
-                                className="p-1.5 text-danger/80 hover:text-danger bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-md cursor-pointer"
+                                className="p-1.5 text-danger/80 hover:text-danger bg-glass-2 border border-border-subtle rounded-md cursor-pointer"
                                 title="Excluir Usuário"
                               >
                                 <Trash2 className="h-3.5 w-3.5" />

@@ -50,7 +50,8 @@ import {
   User,
   Key,
   Copy,
-  Check
+  Check,
+  Palette
 } from 'lucide-react';
 
 interface Stage {
@@ -191,14 +192,30 @@ export function SettingsPanel({
   initialForms,
 }: SettingsPanelProps) {
   const isAdmin = projectRole === 'PROJECT_ADMIN' || projectRole === 'SUPERADMIN';
-  const [activeTab, setActiveTab] = useState<'funnels' | 'tags' | 'origins' | 'losses' | 'custom' | 'webhooks' | 'whatsapp' | 'comerciais' | 'api' | 'forms'>(isAdmin ? 'funnels' : 'forms');
+  const [activeTab, setActiveTab] = useState<'funnels' | 'tags' | 'origins' | 'losses' | 'custom' | 'webhooks' | 'whatsapp' | 'comerciais' | 'api' | 'forms' | 'appearance'>(isAdmin ? 'funnels' : 'forms');
+  const [currentTheme, setCurrentTheme] = useState('dark');
+
+  React.useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const theme = localStorage.getItem('theme') || 'dark';
+      setCurrentTheme(theme);
+    }
+    const handleThemeChange = () => {
+      if (typeof window !== 'undefined') {
+        const theme = localStorage.getItem('theme') || 'dark';
+        setCurrentTheme(theme);
+      }
+    };
+    window.addEventListener('theme-changed', handleThemeChange);
+    return () => window.removeEventListener('theme-changed', handleThemeChange);
+  }, []);
 
   // Inicializa a aba ativa a partir da query param ?tab=
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const tabParam = params.get('tab');
-      const validTabs = ['funnels', 'tags', 'origins', 'losses', 'custom', 'webhooks', 'whatsapp', 'comerciais', 'api', 'forms'];
+      const validTabs = ['funnels', 'tags', 'origins', 'losses', 'custom', 'webhooks', 'whatsapp', 'comerciais', 'api', 'forms', 'appearance'];
       if (tabParam && validTabs.includes(tabParam)) {
         setActiveTab(tabParam as any);
       }
@@ -910,11 +927,12 @@ ${fieldsHtml}
             </>
           )}
           <TabButton active={activeTab === 'forms'} onClick={() => setActiveTab('forms')} icon={<FileText className="h-4 w-4" />} label="Formulários" />
+          <TabButton active={activeTab === 'appearance'} onClick={() => setActiveTab('appearance')} icon={<Palette className="h-4 w-4" />} label="Aparência" />
         </div>
       </div>
 
       {/* Coluna Direita: Conteúdo da Configuração (Flex-1) */}
-      <div className="flex-1 bg-[rgba(255,255,255,0.01)] border border-border-subtle rounded-2xl p-6 shadow-2xl flex flex-col min-h-0 overflow-y-auto">
+      <div className="flex-1 bg-glass-1 border border-border-subtle rounded-2xl p-6 shadow-2xl flex flex-col min-h-0 overflow-y-auto">
         
         {/* ABA 1: FUNIS & ESTÁGIOS */}
         {activeTab === 'funnels' && (
@@ -925,7 +943,7 @@ ${fieldsHtml}
             </div>
 
             {/* Seletor e Criação de Funil */}
-            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[rgba(255,255,255,0.02)] border border-border-subtle p-4 rounded-xl">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-glass-2 border border-border-subtle p-4 rounded-xl">
               <div className="flex flex-col gap-1.5 w-full sm:w-auto">
                 <label className="text-[10px] font-bold text-text-secondary uppercase">Funil Ativo para Configuração</label>
                 <select
@@ -966,7 +984,7 @@ ${fieldsHtml}
 
             {/* Ações e nome do Funil selecionado */}
             {selectedPipeline && (
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-[rgba(255,255,255,0.01)] border border-border-subtle p-4 rounded-xl border-l-4 border-l-accent">
+              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 bg-glass-1 border border-border-subtle p-4 rounded-xl border-l-4 border-l-accent">
                 {isEditingPipelineName ? (
                   <form onSubmit={handleUpdatePipelineName} className="flex gap-2 items-center w-full">
                     <input
@@ -989,7 +1007,7 @@ ${fieldsHtml}
                         setEditingPipelineName(selectedPipeline.name);
                         setIsEditingPipelineName(false);
                       }}
-                      className="px-3 py-1.5 bg-[rgba(255,255,255,0.05)] hover:bg-[rgba(255,255,255,0.1)] text-white font-bold text-xs rounded-lg transition-all cursor-pointer"
+                      className="px-3 py-1.5 bg-glass-5 hover:bg-[rgba(255,255,255,0.1)] text-white font-bold text-xs rounded-lg transition-all cursor-pointer"
                     >
                       Cancelar
                     </button>
@@ -1022,13 +1040,13 @@ ${fieldsHtml}
             {/* Estágios (Colunas) do Funil Selecionado */}
             {selectedPipeline && (
               <div className="space-y-4">
-                <div className="border-t border-[rgba(255,255,255,0.05)] pt-4">
+                <div className="border-t border-border-subtle pt-4">
                   <h3 className="text-xs font-bold text-white mb-1">Estágios do Funil (Colunas do Kanban)</h3>
                   <p className="text-[10px] text-text-secondary">Defina as colunas do seu Kanban para este funil ativo.</p>
                 </div>
 
                 {/* Formulário rápido */}
-                <form onSubmit={handleAddStage} className="flex gap-2 items-end bg-[rgba(255,255,255,0.01)] border border-border-subtle p-4 rounded-xl">
+                <form onSubmit={handleAddStage} className="flex gap-2 items-end bg-glass-1 border border-border-subtle p-4 rounded-xl">
                   <div className="flex-1 flex flex-col gap-1.5">
                     <label className="text-[10px] font-bold text-text-secondary uppercase">Nome do Estágio</label>
                     <input
@@ -1063,7 +1081,7 @@ ${fieldsHtml}
                 {/* Listagem de Estágios */}
                 <div className="space-y-2.5">
                   {stages.map((stage) => (
-                    <div key={stage.id} className="flex items-center justify-between p-3.5 bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-xl text-xs">
+                    <div key={stage.id} className="flex items-center justify-between p-3.5 bg-glass-2 border border-border-subtle rounded-xl text-xs">
                       <div className="flex items-center gap-2 text-white font-semibold">
                         <span className="h-3 w-3 rounded-full border border-black/20" style={{ backgroundColor: stage.color }} />
                         {stage.name}
@@ -1091,7 +1109,7 @@ ${fieldsHtml}
             </div>
 
             {/* Form */}
-            <form onSubmit={handleAddTag} className="flex gap-2 items-end bg-[rgba(255,255,255,0.01)] border border-border-subtle p-4 rounded-xl">
+            <form onSubmit={handleAddTag} className="flex gap-2 items-end bg-glass-1 border border-border-subtle p-4 rounded-xl">
               <div className="flex-1 flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-text-secondary uppercase">Nome da Tag</label>
                 <input
@@ -1151,7 +1169,7 @@ ${fieldsHtml}
             </div>
 
             {/* Form */}
-            <form onSubmit={handleAddOrigin} className="flex gap-2 items-end bg-[rgba(255,255,255,0.01)] border border-border-subtle p-4 rounded-xl">
+            <form onSubmit={handleAddOrigin} className="flex gap-2 items-end bg-glass-1 border border-border-subtle p-4 rounded-xl">
               <div className="flex-1 flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-text-secondary uppercase">Nome do Canal / Origem</label>
                 <input
@@ -1175,7 +1193,7 @@ ${fieldsHtml}
             {/* Listagem */}
             <div className="space-y-2">
               {originsList.map((origin) => (
-                <div key={origin.id} className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-xl text-xs">
+                <div key={origin.id} className="flex items-center justify-between p-3 bg-glass-2 border border-border-subtle rounded-xl text-xs">
                   <span className="text-white font-bold">{origin.name}</span>
                   <button
                     onClick={() => handleDeleteOrigin(origin.id)}
@@ -1198,7 +1216,7 @@ ${fieldsHtml}
             </div>
 
             {/* Form */}
-            <form onSubmit={handleAddLost} className="flex gap-2 items-end bg-[rgba(255,255,255,0.01)] border border-border-subtle p-4 rounded-xl">
+            <form onSubmit={handleAddLost} className="flex gap-2 items-end bg-glass-1 border border-border-subtle p-4 rounded-xl">
               <div className="flex-1 flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-text-secondary uppercase">Justificativa / Motivo</label>
                 <input
@@ -1222,7 +1240,7 @@ ${fieldsHtml}
             {/* Listagem */}
             <div className="space-y-2">
               {lostList.map((l) => (
-                <div key={l.id} className="flex items-center justify-between p-3 bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-xl text-xs">
+                <div key={l.id} className="flex items-center justify-between p-3 bg-glass-2 border border-border-subtle rounded-xl text-xs">
                   <span className="text-white font-bold">{l.reason}</span>
                   <button
                     onClick={() => handleDeleteLost(l.id)}
@@ -1245,7 +1263,7 @@ ${fieldsHtml}
             </div>
 
             {/* Form */}
-            <form onSubmit={handleAddCustom} className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[rgba(255,255,255,0.01)] border border-border-subtle p-4 rounded-xl items-end">
+            <form onSubmit={handleAddCustom} className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-glass-1 border border-border-subtle p-4 rounded-xl items-end">
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-text-secondary uppercase">Nome do Campo</label>
                 <input
@@ -1297,7 +1315,7 @@ ${fieldsHtml}
             {/* Listagem */}
             <div className="space-y-2">
               {customList.map((c) => (
-                <div key={c.id} className="p-3.5 bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-xl text-xs flex justify-between items-center">
+                <div key={c.id} className="p-3.5 bg-glass-2 border border-border-subtle rounded-xl text-xs flex justify-between items-center">
                   <div>
                     <h4 className="font-bold text-white">{c.name}</h4>
                     <p className="text-[10px] text-text-secondary mt-0.5">
@@ -1325,7 +1343,7 @@ ${fieldsHtml}
             </div>
 
             {/* Form */}
-            <form onSubmit={handleAddWebhook} className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-[rgba(255,255,255,0.01)] border border-border-subtle p-4 rounded-xl items-end">
+            <form onSubmit={handleAddWebhook} className="grid grid-cols-1 sm:grid-cols-2 gap-4 bg-glass-1 border border-border-subtle p-4 rounded-xl items-end">
               <div className="flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-text-secondary uppercase">Nome da Integração</label>
                 <input
@@ -1372,7 +1390,7 @@ ${fieldsHtml}
               </div>
 
               {/* Mapeamento simples */}
-              <div className="col-span-2 border-t border-[rgba(255,255,255,0.05)] pt-4 mt-2">
+              <div className="col-span-2 border-t border-border-subtle pt-4 mt-2">
                 <h4 className="text-xs font-bold text-white mb-3">Mapeamento de Campos (Nome da chave do JSON enviado)</h4>
                 <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
                   <div className="flex flex-col gap-1 text-[10px]">
@@ -1412,7 +1430,7 @@ ${fieldsHtml}
               {webhooksList.map((webhook) => {
                 const webhookUrl = `${baseUrl}/api/webhooks/incoming/${webhook.token}`;
                 return (
-                  <div key={webhook.id} className="p-4 bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-xl text-xs space-y-3 relative">
+                  <div key={webhook.id} className="p-4 bg-glass-2 border border-border-subtle rounded-xl text-xs space-y-3 relative">
                     <button
                       onClick={() => handleDeleteWebhook(webhook.id)}
                       className="absolute top-4 right-4 text-text-tertiary hover:text-danger p-1 cursor-pointer"
@@ -1443,7 +1461,7 @@ ${fieldsHtml}
             </div>
 
             {/* Logs de Webhook (adendo) */}
-            <div className="border-t border-[rgba(255,255,255,0.05)] pt-6">
+            <div className="border-t border-border-subtle pt-6">
               <h3 className="text-xs font-bold text-accent uppercase tracking-wider mb-4 flex items-center gap-1.5">
                 <FileText className="h-4 w-4" />
                 Histórico & Logs de Depuração (Últimos 100)
@@ -1462,7 +1480,7 @@ ${fieldsHtml}
                           {log.status}
                         </span>
                       </div>
-                      <p className="text-text-tertiary font-mono text-[9px] select-all truncate bg-[rgba(255,255,255,0.01)] p-1 rounded border border-border-subtle">
+                      <p className="text-text-tertiary font-mono text-[9px] select-all truncate bg-glass-1 p-1 rounded border border-border-subtle">
                         {log.payload}
                       </p>
                       {log.errorDetails && <p className="text-danger font-semibold font-mono text-[9px]">{log.errorDetails}</p>}
@@ -1486,7 +1504,7 @@ ${fieldsHtml}
             </div>
 
             {/* Form */}
-            <form onSubmit={handleAddWhatsapp} className="flex gap-2 items-end bg-[rgba(255,255,255,0.01)] border border-border-subtle p-4 rounded-xl">
+            <form onSubmit={handleAddWhatsapp} className="flex gap-2 items-end bg-glass-1 border border-border-subtle p-4 rounded-xl">
               <div className="flex-1 flex flex-col gap-1.5">
                 <label className="text-[10px] font-bold text-text-secondary uppercase">Nome de Identificação (Ex: WhatsApp Comercial)</label>
                 <input
@@ -1523,7 +1541,7 @@ ${fieldsHtml}
               {whatsappList.map((inst) => {
                 const evolutionWebhookUrl = `${baseUrl}/api/webhooks/whatsapp`;
                 return (
-                  <div key={inst.id} className="p-4 bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-xl text-xs space-y-4 relative">
+                  <div key={inst.id} className="p-4 bg-glass-2 border border-border-subtle rounded-xl text-xs space-y-4 relative">
                     <button
                       onClick={() => handleDeleteWhatsapp(inst.id)}
                       className="absolute top-4 right-4 text-text-tertiary hover:text-danger p-1 cursor-pointer"
@@ -1553,7 +1571,7 @@ ${fieldsHtml}
 
                     {/* Ações adicionais */}
                     {inst.status !== 'CONNECTED' && inst.type === 'WHATSAPP' && (
-                      <div className="pt-2 border-t border-[rgba(255,255,255,0.04)] flex flex-col items-center gap-3">
+                      <div className="pt-2 border-t border-border-subtle flex flex-col items-center gap-3">
                         <button
                           onClick={() => handleRequestQRCode(inst.id)}
                           className="flex items-center gap-1.5 px-3 py-1.5 bg-accent hover:bg-accent-light text-black font-bold text-xs rounded-lg transition-all cursor-pointer"
@@ -1582,7 +1600,7 @@ ${fieldsHtml}
                     )}
 
                     {/* Exibe a URL de Webhook da Evolution API */}
-                    <div className="pt-3 border-t border-[rgba(255,255,255,0.04)] space-y-1.5">
+                    <div className="pt-3 border-t border-border-subtle space-y-1.5">
                       <span className="text-[9px] font-bold text-text-secondary uppercase tracking-wider block">URL Webhook para plugar na Evolution API:</span>
                       <div className="flex items-center gap-2 bg-bg-base border border-border-subtle rounded-lg p-2">
                         <span className="text-[10px] text-text-tertiary select-all truncate flex-1 font-mono">{evolutionWebhookUrl}</span>
@@ -1650,7 +1668,7 @@ ${fieldsHtml}
 
               return (
                 <form onSubmit={handleSaveCommercials} className="space-y-6">
-                  <div className="bg-[rgba(255,255,255,0.01)] border border-border-subtle p-4 rounded-xl space-y-4">
+                  <div className="bg-glass-1 border border-border-subtle p-4 rounded-xl space-y-4">
                     <h3 className="text-xs font-bold text-white uppercase tracking-wider">Membros Disponíveis</h3>
                     
                     <div className="space-y-2.5">
@@ -1666,7 +1684,7 @@ ${fieldsHtml}
                               className={`flex items-center justify-between p-3.5 border rounded-xl text-xs cursor-pointer transition-all ${
                                 isSelected
                                   ? 'border-accent bg-accent-glow text-white font-bold'
-                                  : 'border-[rgba(255,255,255,0.04)] bg-[rgba(255,255,255,0.01)] text-text-secondary hover:border-border-glass'
+                                  : 'border-border-subtle bg-glass-1 text-text-secondary hover:border-border-glass'
                               }`}
                             >
                               <div className="flex items-center gap-2.5">
@@ -1681,7 +1699,7 @@ ${fieldsHtml}
                                   <span className="text-[10px] text-text-tertiary font-mono">{member.user.email}</span>
                                 </div>
                               </div>
-                              <span className="text-[10px] bg-[rgba(255,255,255,0.03)] px-2 py-0.5 rounded border border-border-subtle">
+                              <span className="text-[10px] bg-glass-3 px-2 py-0.5 rounded border border-border-subtle">
                                 {member.role === 'PROJECT_ADMIN' ? 'Administrador' : 'Membro'}
                               </span>
                             </div>
@@ -1692,7 +1710,7 @@ ${fieldsHtml}
                   </div>
 
                   {/* Modo de distribuição status card */}
-                  <div className="bg-[rgba(5,5,5,0.2)] border border-border-subtle p-4 rounded-xl space-y-2 text-xs">
+                  <div className="bg-dark-glass-2 border border-border-subtle p-4 rounded-xl space-y-2 text-xs">
                     <h4 className="font-bold text-white uppercase tracking-wider text-[10px] text-accent">Modo de Atribuição Comercial</h4>
                     {selectedCommercialIds.length === 1 ? (
                       <div className="text-white leading-relaxed">
@@ -1741,7 +1759,7 @@ ${fieldsHtml}
               </p>
             </div>
 
-            <div className="p-5 bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-xl space-y-4">
+            <div className="p-5 bg-glass-2 border border-border-subtle rounded-xl space-y-4">
               <div>
                 <h4 className="font-bold text-white text-[10px] uppercase tracking-wider text-accent mb-1.5">Status da API Key</h4>
                 {apiKeyPrefix ? (
@@ -1780,7 +1798,7 @@ ${fieldsHtml}
               </div>
             </div>
 
-            <div className="p-5 bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-xl space-y-3">
+            <div className="p-5 bg-glass-2 border border-border-subtle rounded-xl space-y-3">
               <h4 className="font-bold text-white text-[10px] uppercase tracking-wider text-accent mb-1">Documentação Rápida dos Endpoints</h4>
               <p className="text-[11px] text-text-secondary">
                 Todas as requisições devem incluir o header <code className="bg-black/35 px-1.5 py-0.5 rounded text-white">Authorization: Bearer SUA_CHAVE</code>.
@@ -1886,7 +1904,7 @@ ${fieldsHtml}
 
           {/* EDITOR DE FORMULÁRIO */}
           {isFormEditorOpen ? (
-            <div className="bg-[rgba(255,255,255,0.02)] border border-border-subtle p-6 rounded-xl space-y-6">
+            <div className="bg-glass-2 border border-border-subtle p-6 rounded-xl space-y-6">
               <h3 className="text-sm font-bold text-white font-display">
                 {editingFormId ? 'Editar Formulário' : 'Novo Formulário Embutido'}
               </h3>
@@ -2106,7 +2124,7 @@ ${fieldsHtml}
             /* GRID DE LISTAGEM DE FORMULÁRIOS */
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {formsList.map(form => (
-                <div key={form.id} className="bg-[rgba(255,255,255,0.01)] border border-border-subtle border-l-accent hover:border-l-accent-light rounded-xl p-5 shadow-lg relative overflow-hidden group hover:bg-white/[0.01] transition-all">
+                <div key={form.id} className="bg-glass-1 border border-border-subtle border-l-accent hover:border-l-accent-light rounded-xl p-5 shadow-lg relative overflow-hidden group hover:bg-white/[0.01] transition-all">
                   <div className="flex justify-between items-start">
                     <div>
                       <h3 className="text-sm font-bold text-white font-display mb-1">{form.name}</h3>
@@ -2157,7 +2175,7 @@ ${fieldsHtml}
               ))}
 
               {formsList.length === 0 && (
-                <div className="md:col-span-2 text-center py-10 bg-[rgba(255,255,255,0.01)] border border-border-subtle border-dashed rounded-xl">
+                <div className="md:col-span-2 text-center py-10 bg-glass-1 border border-border-subtle border-dashed rounded-xl">
                   <p className="text-xs text-text-secondary">Nenhum formulário cadastrado para este projeto.</p>
                   {isAdmin && (
                     <button
@@ -2171,6 +2189,90 @@ ${fieldsHtml}
               )}
             </div>
           )}
+        </div>
+      )}
+
+      {/* ABA: APARÊNCIA (TEMAS) */}
+      {activeTab === 'appearance' && (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-md font-bold text-text-primary font-display mb-1">Configuração de Aparência e Tema</h2>
+            <p className="text-xs text-text-secondary">Escolha o estilo visual de sua preferência para navegar pela plataforma.</p>
+          </div>
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+            {/* Opção Tema Dark */}
+            <button
+              onClick={() => {
+                localStorage.setItem('theme', 'dark');
+                document.documentElement.setAttribute('data-theme', 'dark');
+                window.dispatchEvent(new Event('theme-changed'));
+              }}
+              className={`p-5 rounded-2xl border text-left flex flex-col gap-4 transition-all hover:translate-y-[-2px] cursor-pointer ${
+                currentTheme !== 'light'
+                  ? 'bg-accent/10 border-accent shadow-lg shadow-accent/10'
+                  : 'bg-glass-2 border-border-subtle hover:border-border-strong'
+              }`}
+            >
+              <div className="h-28 w-full bg-[#050505] border border-border-subtle rounded-xl flex overflow-hidden">
+                <div className="w-1/4 bg-[#0a0f0a] border-r border-border-subtle p-2 space-y-1">
+                  <div className="h-2 w-full bg-accent/20 rounded"></div>
+                  <div className="h-2 w-8/12 bg-glass-3 rounded"></div>
+                  <div className="h-2 w-6/12 bg-glass-3 rounded"></div>
+                </div>
+                <div className="flex-1 p-3 bg-gradient-to-b from-[#050505] to-[#09120b] space-y-2">
+                  <div className="h-3 w-1/3 bg-glass-3 rounded"></div>
+                  <div className="grid grid-cols-3 gap-1">
+                    <div className="h-10 bg-glass-2 border border-border-subtle rounded"></div>
+                    <div className="h-10 bg-glass-2 border border-border-subtle rounded"></div>
+                    <div className="h-10 bg-glass-2 border border-border-subtle rounded"></div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-text-primary">Tema Black / Escuro</h4>
+                <p className="text-[10px] text-text-secondary mt-1">
+                  Visual padrão da plataforma com fundo escuro, efeitos em vidro (glassmorphism) e destaques neon.
+                </p>
+              </div>
+            </button>
+
+            {/* Opção Tema Light */}
+            <button
+              onClick={() => {
+                localStorage.setItem('theme', 'light');
+                document.documentElement.setAttribute('data-theme', 'light');
+                window.dispatchEvent(new Event('theme-changed'));
+              }}
+              className={`p-5 rounded-2xl border text-left flex flex-col gap-4 transition-all hover:translate-y-[-2px] cursor-pointer ${
+                currentTheme === 'light'
+                  ? 'bg-accent/10 border-accent shadow-lg shadow-accent/10'
+                  : 'bg-glass-2 border-border-subtle hover:border-border-strong'
+              }`}
+            >
+              <div className="h-28 w-full bg-[#f9fafb] border border-border-strong rounded-xl flex overflow-hidden">
+                <div className="w-1/4 bg-[#f3f4f6] border-r border-border-strong p-2 space-y-1">
+                  <div className="h-2 w-full bg-accent/30 rounded"></div>
+                  <div className="h-2 w-8/12 bg-glass-3 rounded"></div>
+                  <div className="h-2 w-6/12 bg-glass-3 rounded"></div>
+                </div>
+                <div className="flex-1 p-3 bg-gradient-to-b from-[#f9fafb] to-[#f3f4f6] space-y-2">
+                  <div className="h-3 w-1/3 bg-glass-3 rounded"></div>
+                  <div className="grid grid-cols-3 gap-1">
+                    <div className="h-10 bg-white border border-border-strong rounded shadow-sm"></div>
+                    <div className="h-10 bg-white border border-border-strong rounded shadow-sm"></div>
+                    <div className="h-10 bg-white border border-border-strong rounded shadow-sm"></div>
+                  </div>
+                </div>
+              </div>
+              <div>
+                <h4 className="text-xs font-bold text-text-primary">Tema Light / Claro</h4>
+                <p className="text-[10px] text-text-secondary mt-1">
+                  Visual com fundo claro, melhorando a visibilidade sob luz forte com elementos limpos e sombras sutis.
+                </p>
+              </div>
+            </button>
+          </div>
         </div>
       )}
 
@@ -2254,7 +2356,7 @@ function TabButton({ active, onClick, icon, label }: TabButtonProps) {
       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-xs font-semibold border transition-all cursor-pointer ${
         active 
           ? 'bg-accent/15 border-border-glass text-accent' 
-          : 'text-text-secondary hover:text-white border-transparent hover:bg-[rgba(255,255,255,0.02)]'
+          : 'text-text-secondary hover:text-white border-transparent hover:bg-glass-2'
       }`}
     >
       <span className={active ? 'text-accent' : 'text-text-tertiary'}>

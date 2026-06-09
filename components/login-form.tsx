@@ -124,7 +124,7 @@ export function LoginForm() {
         initial={{ opacity: 0, scale: 0.98 }}
         animate={{ opacity: 1, scale: 1 }}
         transition={{ duration: 0.5, delay: 0.1, ease: 'easeOut' }}
-        className="w-full bg-[rgba(255,255,255,0.01)] backdrop-blur-md border border-[rgba(255,255,255,0.06)] border-l-[rgba(109,138,108,0.3)] rounded-2xl p-8 shadow-2xl overflow-hidden"
+        className="w-full bg-glass-1 backdrop-blur-md border border-border-subtle border-l-[rgba(109,138,108,0.3)] rounded-2xl p-8 shadow-2xl overflow-hidden"
       >
         <AnimatePresence mode="wait">
           {mode === 'login' && (
@@ -166,7 +166,7 @@ export function LoginForm() {
                       disabled={isPending}
                       value={email}
                       onChange={(e) => setEmail(e.target.value)}
-                      className="w-full pl-10 bg-[rgba(255,255,255,0.01)] border-border-subtle focus:border-accent text-white"
+                      className="w-full pl-10 bg-glass-1 border-border-subtle focus:border-accent text-white"
                     />
                   </div>
                 </div>
@@ -200,7 +200,7 @@ export function LoginForm() {
                       disabled={isPending}
                       value={password}
                       onChange={(e) => setPassword(e.target.value)}
-                      className="w-full pl-10 bg-[rgba(255,255,255,0.01)] border-border-subtle focus:border-accent text-white"
+                      className="w-full pl-10 bg-glass-1 border-border-subtle focus:border-accent text-white"
                     />
                   </div>
                 </div>
@@ -267,7 +267,7 @@ export function LoginForm() {
                       disabled={isPending}
                       value={recoveryEmail}
                       onChange={(e) => setRecoveryEmail(e.target.value)}
-                      className="w-full pl-10 bg-[rgba(255,255,255,0.01)] border-border-subtle focus:border-accent text-white"
+                      className="w-full pl-10 bg-glass-1 border-border-subtle focus:border-accent text-white"
                     />
                   </div>
                 </div>

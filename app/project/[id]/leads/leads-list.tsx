@@ -738,7 +738,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
           )}
           <button
             onClick={() => setShowImportModal(true)}
-            className="px-3 py-2 bg-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.06)] border border-border-subtle hover:border-text-secondary text-white font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer"
+            className="px-3 py-2 bg-glass-3 hover:bg-[rgba(255,255,255,0.06)] border border-border-subtle hover:border-text-secondary text-white font-bold text-xs rounded-lg transition-all flex items-center gap-1.5 cursor-pointer"
           >
             Importar CSV
           </button>
@@ -752,7 +752,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
       </div>
 
       {/* Filtros e Busca */}
-      <div className="flex-shrink-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 bg-[rgba(255,255,255,0.01)] border border-border-subtle p-4 rounded-xl backdrop-blur-md">
+      <div className="flex-shrink-0 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3 bg-glass-1 border border-border-subtle p-4 rounded-xl backdrop-blur-md">
         
         {/* Busca por texto */}
         <div className="relative">
@@ -816,11 +816,11 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
       </div>
 
       {/* Tabela de Leads */}
-      <div className="flex-1 bg-[rgba(255,255,255,0.01)] border border-border-subtle rounded-xl overflow-hidden shadow-xl flex flex-col min-h-0">
+      <div className="flex-1 bg-glass-1 border border-border-subtle rounded-xl overflow-hidden shadow-xl flex flex-col min-h-0">
         <div className="flex-1 overflow-y-auto">
           <table className="w-full text-left border-collapse">
             <thead>
-              <tr className="border-b border-border-subtle bg-[rgba(255,255,255,0.01)] text-text-secondary text-xs uppercase tracking-wider sticky top-0 z-10 backdrop-blur-md">
+              <tr className="border-b border-border-subtle bg-glass-1 text-text-secondary text-xs uppercase tracking-wider sticky top-0 z-10 backdrop-blur-md">
                 <th className="p-4 font-semibold w-10">
                   <input
                     type="checkbox"
@@ -839,7 +839,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                 <th className="p-4 font-semibold text-right">Valor Total</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-[rgba(255,255,255,0.03)] text-xs text-text-secondary">
+            <tbody className="divide-y divide-border-subtle text-xs text-text-secondary">
               {leads.length === 0 ? (
                 <tr>
                   <td colSpan={9} className="p-8 text-center text-text-tertiary">
@@ -853,7 +853,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                     <tr 
                       key={lead.id}
                       onClick={() => setSelectedLeadId(lead.id)}
-                      className="hover:bg-[rgba(255,255,255,0.02)] cursor-pointer transition-colors"
+                      className="hover:bg-glass-2 cursor-pointer transition-colors"
                     >
                       <td className="p-4 w-10" onClick={(e) => e.stopPropagation()}>
                         <input
@@ -891,7 +891,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                       </td>
                       <td className="p-4">
                         {lead.origin ? (
-                          <span className="bg-[rgba(255,255,255,0.03)] px-2 py-0.5 rounded border border-border-subtle">
+                          <span className="bg-glass-3 px-2 py-0.5 rounded border border-border-subtle">
                             {lead.origin.name}
                           </span>
                         ) : '—'}
@@ -902,7 +902,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                             ? 'bg-danger/10 text-danger border border-danger/20' 
                             : lead.priority === 'MEDIA'
                               ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
-                              : 'bg-[rgba(255,255,255,0.03)] text-text-secondary border border-border-subtle'
+                              : 'bg-glass-3 text-text-secondary border border-border-subtle'
                         }`}>
                           {lead.priority}
                         </span>
@@ -911,7 +911,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                         <div className="flex flex-col gap-1 max-w-[200px]">
                           {lead.pipelineEntries && lead.pipelineEntries.length > 0 ? (
                             lead.pipelineEntries.map((entry: any) => (
-                              <span key={entry.id} className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-[rgba(255,255,255,0.03)] border border-border-subtle text-white truncate" title={`${entry.pipeline.name}: ${entry.stage.name}`}>
+                              <span key={entry.id} className="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-semibold bg-glass-3 border border-border-subtle text-white truncate" title={`${entry.pipeline.name}: ${entry.stage.name}`}>
                                 {entry.pipeline.name}: {entry.stage.name}
                               </span>
                             ))
@@ -940,7 +940,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
           <div className="bg-bg-elevated border border-border-strong w-full max-w-6xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl flex flex-col">
             
             {/* Header do Modal */}
-            <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.01)] flex justify-between items-center flex-shrink-0">
+            <div className="px-6 py-4 border-b border-border-subtle bg-glass-1 flex justify-between items-center flex-shrink-0">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-lg bg-accent/15 border border-border-glass flex items-center justify-center text-accent">
                   <User className="h-4 w-4" />
@@ -970,7 +970,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
             <div className="flex-1 overflow-hidden flex flex-col md:flex-row min-h-0">
               
               {/* Coluna Lateral: Dados e Participações do Lead */}
-              <div className="w-full md:w-[350px] border-b md:border-b-0 md:border-r border-[rgba(255,255,255,0.05)] p-6 overflow-y-auto space-y-6 flex-shrink-0 bg-[rgba(5,5,5,0.1)] custom-scrollbar">
+              <div className="w-full md:w-[350px] border-b md:border-b-0 md:border-r border-border-subtle p-6 overflow-y-auto space-y-6 flex-shrink-0 bg-dark-glass-1 custom-scrollbar">
                 <div className="space-y-4">
                   <div className="flex justify-between items-center">
                     <h3 className="text-xs font-bold text-accent uppercase tracking-wider">Dados do Lead</h3>
@@ -1005,7 +1005,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                             ? 'bg-danger/10 text-danger border border-danger/20' 
                             : leadDetail.priority === 'MEDIA'
                               ? 'bg-amber-500/10 text-amber-500 border border-amber-500/20'
-                              : 'bg-[rgba(255,255,255,0.03)] text-text-secondary border border-border-subtle'
+                              : 'bg-glass-3 text-text-secondary border border-border-subtle'
                         }`}>
                           {leadDetail.priority}
                         </span>
@@ -1143,7 +1143,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                 </div>
 
                 {/* Participações em Funis (Incorporado) */}
-                <div className="border-t border-[rgba(255,255,255,0.05)] pt-6 space-y-4">
+                <div className="border-t border-border-subtle pt-6 space-y-4">
                   <h3 className="text-xs font-bold text-accent uppercase tracking-wider flex items-center gap-1.5">
                     Participações em Funis
                   </h3>
@@ -1160,8 +1160,8 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                         const stagesList = pipelineObj?.stages || [];
                         
                         return (
-                          <div key={entry.id} className="bg-[rgba(255,255,255,0.02)] border border-border-subtle p-3 rounded-lg space-y-3">
-                            <div className="flex justify-between items-center border-b border-[rgba(255,255,255,0.04)] pb-1.5">
+                          <div key={entry.id} className="bg-glass-2 border border-border-subtle p-3 rounded-lg space-y-3">
+                            <div className="flex justify-between items-center border-b border-border-subtle pb-1.5">
                               <span className="text-xs font-bold text-white truncate block max-w-[150px]">
                                 {entry.pipeline.name}
                               </span>
@@ -1170,7 +1170,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                                   ? 'bg-accent/15 text-accent border border-accent/20'
                                   : entry.status === 'LOST'
                                     ? 'bg-danger/10 text-danger border border-danger/20'
-                                    : 'bg-[rgba(255,255,255,0.03)] text-text-secondary border border-border-subtle'
+                                    : 'bg-glass-3 text-text-secondary border border-border-subtle'
                               }`}>
                                 {entry.status}
                               </span>
@@ -1278,7 +1278,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
 
                   {/* Formulário para adicionar a outro funil */}
                   {availablePipelines.length > 0 && (
-                    <div className="border-t border-[rgba(255,255,255,0.05)] pt-4 mt-4 space-y-3">
+                    <div className="border-t border-border-subtle pt-4 mt-4 space-y-3">
                       <h4 className="text-[11px] font-bold text-white uppercase tracking-wider">Adicionar a outro Funil</h4>
                       <form onSubmit={handleAddPipelineEntry} className="space-y-2.5">
                         <div className="flex flex-col gap-1 text-[11px]">
@@ -1339,49 +1339,49 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
 
                 {/* Rastreamento / UTM (Adendo) */}
                 {(leadDetail?.utmSource || leadDetail?.utmMedium || leadDetail?.utmCampaign || leadDetail?.utmContent || leadDetail?.utmTerm || leadDetail?.referrer || leadDetail?.landingPage) && (
-                  <div className="border-t border-[rgba(255,255,255,0.05)] pt-6 space-y-4">
+                  <div className="border-t border-border-subtle pt-6 space-y-4">
                     <h3 className="text-xs font-bold text-accent uppercase tracking-wider">Dados de Rastreamento (UTMs)</h3>
                     <div className="grid grid-cols-2 gap-3 text-xs">
                       {leadDetail.utmSource && (
                         <div className="flex flex-col gap-0.5">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">UTM Source</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.utmSource}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.utmSource}</span>
                         </div>
                       )}
                       {leadDetail.utmMedium && (
                         <div className="flex flex-col gap-0.5">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">UTM Medium</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.utmMedium}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.utmMedium}</span>
                         </div>
                       )}
                       {leadDetail.utmCampaign && (
                         <div className="flex flex-col gap-0.5">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">UTM Campaign</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.utmCampaign}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.utmCampaign}</span>
                         </div>
                       )}
                       {leadDetail.utmContent && (
                         <div className="flex flex-col gap-0.5">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">UTM Content</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.utmContent}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.utmContent}</span>
                         </div>
                       )}
                       {leadDetail.utmTerm && (
                         <div className="flex flex-col gap-0.5 col-span-2">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">UTM Term</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.utmTerm}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.utmTerm}</span>
                         </div>
                       )}
                       {leadDetail.referrer && (
                         <div className="flex flex-col gap-0.5 col-span-2">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">Referrer (Origem)</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.referrer}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.referrer}</span>
                         </div>
                       )}
                       {leadDetail.landingPage && (
                         <div className="flex flex-col gap-0.5 col-span-2">
                           <span className="text-[9px] font-semibold text-text-secondary uppercase">Landing Page</span>
-                          <span className="text-white bg-[rgba(255,255,255,0.02)] border border-[rgba(255,255,255,0.05)] rounded-md px-2 py-1 select-all break-all">{leadDetail.landingPage}</span>
+                          <span className="text-white bg-glass-2 border border-border-subtle rounded-md px-2 py-1 select-all break-all">{leadDetail.landingPage}</span>
                         </div>
                       )}
                     </div>
@@ -1389,7 +1389,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                 )}
 
                 {/* Campos Personalizados (Adendo) */}
-                <div className="border-t border-[rgba(255,255,255,0.05)] pt-6 space-y-4">
+                <div className="border-t border-border-subtle pt-6 space-y-4">
                   <h3 className="text-xs font-bold text-accent uppercase tracking-wider">Campos Personalizados</h3>
                   
                   {customFields.length === 0 ? (
@@ -1435,7 +1435,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                       <button
                         onClick={handleSaveCustomFields}
                         disabled={isSavingCustomFields}
-                        className="w-full py-1.5 bg-[rgba(255,255,255,0.03)] hover:bg-[rgba(255,255,255,0.06)] border border-border-subtle hover:border-text-secondary text-white font-bold text-xs rounded transition-all cursor-pointer flex items-center justify-center gap-1.5"
+                        className="w-full py-1.5 bg-glass-3 hover:bg-[rgba(255,255,255,0.06)] border border-border-subtle hover:border-text-secondary text-white font-bold text-xs rounded transition-all cursor-pointer flex items-center justify-center gap-1.5"
                       >
                         {isSavingCustomFields && <Loader2 className="h-3.5 w-3.5 animate-spin" />}
                         Salvar Campos
@@ -1466,7 +1466,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                               ? 'bg-accent/15 text-accent' 
                               : act.type === 'STATUS_CHANGE'
                                 ? 'bg-amber-500/15 text-amber-500'
-                                : 'bg-[rgba(255,255,255,0.03)] text-text-secondary'
+                                : 'bg-glass-3 text-text-secondary'
                           }`}>
                             <FileText className="h-3.5 w-3.5" />
                           </div>
@@ -1488,7 +1488,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                     )}
                   </div>
 
-                  <form onSubmit={handleAddComment} className="mt-4 pt-4 border-t border-[rgba(255,255,255,0.05)] flex gap-2 flex-shrink-0">
+                  <form onSubmit={handleAddComment} className="mt-4 pt-4 border-t border-border-subtle flex gap-2 flex-shrink-0">
                     <input
                       required
                       type="text"
@@ -1548,7 +1548,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                           <div 
                             key={task.id} 
                             className={`flex items-start gap-2 p-2 rounded border text-xs ${
-                              isCompleted ? 'bg-[rgba(255,255,255,0.01)] opacity-65' : 'bg-[rgba(255,255,255,0.02)] border-border-subtle'
+                              isCompleted ? 'bg-glass-1 opacity-65' : 'bg-glass-2 border-border-subtle'
                             }`}
                           >
                             <button
@@ -1599,7 +1599,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
           <div className="bg-bg-elevated border border-border-strong w-full max-w-4xl h-[85vh] rounded-2xl overflow-hidden shadow-2xl flex flex-col">
             
             {/* Header do Modal */}
-            <div className="px-6 py-4 border-b border-[rgba(255,255,255,0.05)] bg-[rgba(255,255,255,0.01)] flex justify-between items-center flex-shrink-0">
+            <div className="px-6 py-4 border-b border-border-subtle bg-glass-1 flex justify-between items-center flex-shrink-0">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-lg bg-accent/15 border border-border-glass flex items-center justify-center text-accent">
                   <FileText className="h-4 w-4" />
@@ -1678,7 +1678,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                 </div>
               ) : !csvFile ? (
                 /* Seleção do Arquivo */
-                <div className="flex flex-col items-center justify-center py-12 border-2 border-dashed border-border-subtle rounded-xl bg-[rgba(255,255,255,0.01)] hover:bg-[rgba(255,255,255,0.02)] transition-colors relative">
+                <div className="flex flex-col items-center justify-center py-12 border-2 border-dashed border-border-subtle rounded-xl bg-glass-1 hover:bg-glass-2 transition-colors relative">
                   <input
                     type="file"
                     accept=".csv"
@@ -1693,13 +1693,13 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                 /* Mapeamento de Colunas e Prévia */
                 <div className="space-y-6">
                   {/* Informações do Arquivo */}
-                  <div className="flex flex-wrap justify-between items-center gap-2 px-4 py-2.5 bg-[rgba(255,255,255,0.02)] border border-border-subtle rounded-xl text-xs text-text-secondary">
+                  <div className="flex flex-wrap justify-between items-center gap-2 px-4 py-2.5 bg-glass-2 border border-border-subtle rounded-xl text-xs text-text-secondary">
                     <span>Arquivo selecionado: <strong className="text-white">{csvFile.name}</strong></span>
                     <span>Total de registros encontrados: <strong className="text-accent">{csvRows.length} linhas</strong></span>
                   </div>
 
                   {/* Destinos e Configurações */}
-                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-[rgba(255,255,255,0.01)] border border-border-subtle p-4 rounded-xl">
+                  <div className="grid grid-cols-1 md:grid-cols-3 gap-4 bg-glass-1 border border-border-subtle p-4 rounded-xl">
                     <div className="flex flex-col gap-1.5">
                       <label className="text-[10px] font-bold text-text-secondary uppercase">Funil de Destino (Kanban)</label>
                       <select
@@ -1744,7 +1744,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                     <h3 className="text-xs font-bold text-accent uppercase tracking-wider">Mapeamento de Colunas</h3>
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                       {targetFields.map((field) => (
-                        <div key={field.key} className="flex items-center justify-between p-3 rounded-lg bg-[rgba(255,255,255,0.01)] border border-border-subtle gap-4">
+                        <div key={field.key} className="flex items-center justify-between p-3 rounded-lg bg-glass-1 border border-border-subtle gap-4">
                           <span className="text-xs text-white font-semibold">{field.label}</span>
                           <select
                             value={fieldMapping[field.key] !== undefined ? fieldMapping[field.key] : ''}
@@ -1772,10 +1772,10 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                   {/* Prévia dos Dados */}
                   <div className="space-y-3">
                     <h3 className="text-xs font-bold text-accent uppercase tracking-wider">Prévia da Importação (Primeiras 5 linhas)</h3>
-                    <div className="border border-border-subtle rounded-xl overflow-x-auto bg-[rgba(255,255,255,0.01)]">
+                    <div className="border border-border-subtle rounded-xl overflow-x-auto bg-glass-1">
                       <table className="w-full text-left border-collapse text-xs">
                         <thead>
-                          <tr className="border-b border-border-subtle bg-[rgba(255,255,255,0.02)] text-text-secondary uppercase font-semibold">
+                          <tr className="border-b border-border-subtle bg-glass-2 text-text-secondary uppercase font-semibold">
                             {targetFields
                               .filter(f => fieldMapping[f.key] !== undefined && fieldMapping[f.key] !== -1)
                               .map((field) => (
@@ -1793,7 +1793,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                             </tr>
                           ) : (
                             getMappedPreviewRows().map((row, rIdx) => (
-                              <tr key={rIdx} className="hover:bg-[rgba(255,255,255,0.01)]">
+                              <tr key={rIdx} className="hover:bg-glass-1">
                                 {targetFields
                                   .filter(f => fieldMapping[f.key] !== undefined && fieldMapping[f.key] !== -1)
                                   .map((field) => (
@@ -1809,7 +1809,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                   </div>
 
                   {/* Botões de Ação */}
-                  <div className="flex justify-between items-center pt-4 border-t border-[rgba(255,255,255,0.05)]">
+                  <div className="flex justify-between items-center pt-4 border-t border-border-subtle">
                     <button
                       onClick={() => {
                         setCsvFile(null);
@@ -1830,7 +1830,7 @@ export function LeadsList({ projectId, initialLeads, tags, origins, lostStatuses
                           setCsvRows([]);
                           setFieldMapping({});
                         }}
-                        className="px-4 py-2 bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.05)] border border-border-subtle text-white font-bold text-xs rounded-lg transition-all cursor-pointer"
+                        className="px-4 py-2 bg-glass-2 hover:bg-glass-5 border border-border-subtle text-white font-bold text-xs rounded-lg transition-all cursor-pointer"
                       >
                         Cancelar
                       </button>

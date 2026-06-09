@@ -330,7 +330,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
   return (
     <div className="flex-1 flex h-screen overflow-hidden bg-transparent">
       {/* 1. BARRA LATERAL: LISTA DE CHATS */}
-      <div className="w-80 md:w-96 border-r border-border-subtle bg-[rgba(5,5,5,0.2)] backdrop-blur-lg flex flex-col flex-shrink-0">
+      <div className="w-80 md:w-96 border-r border-border-subtle bg-dark-glass-2 backdrop-blur-lg flex flex-col flex-shrink-0">
         
         {/* Header da Barra Lateral */}
         <div className="p-4 border-b border-border-subtle space-y-3 flex-shrink-0">
@@ -340,7 +340,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
           </div>
 
           {/* Status das Instâncias */}
-          <div className="bg-[rgba(255,255,255,0.02)] border border-border-subtle p-2.5 rounded-lg space-y-1.5">
+          <div className="bg-glass-2 border border-border-subtle p-2.5 rounded-lg space-y-1.5">
             <span className="text-[9px] font-bold text-accent uppercase tracking-wider block">Instâncias Ativas</span>
             {whatsappInstances.length === 0 ? (
               <p className="text-[10px] text-text-tertiary">Nenhuma instância cadastrada.</p>
@@ -352,7 +352,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                     <span className={`px-1.5 py-0.5 rounded text-[8px] font-semibold ${
                       inst.status === 'CONNECTED' 
                         ? 'bg-accent/15 text-accent border border-accent/25' 
-                        : 'bg-[rgba(255,255,255,0.03)] text-text-tertiary border border-border-subtle'
+                        : 'bg-glass-3 text-text-tertiary border border-border-subtle'
                     }`}>
                       {inst.status === 'CONNECTED' ? 'Conectado' : 'Desconectado'}
                     </span>
@@ -376,7 +376,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
         </div>
 
         {/* Lista de Conversas */}
-        <div className="flex-1 overflow-y-auto divide-y divide-[rgba(255,255,255,0.03)] custom-scrollbar">
+        <div className="flex-1 overflow-y-auto divide-y divide-border-subtle custom-scrollbar">
           {filteredConversations.length === 0 ? (
             <div className="p-8 text-center text-text-tertiary text-xs">
               Nenhuma conversa ativa encontrada.
@@ -393,12 +393,12 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                   onClick={() => setSelectedConversationId(chat.id)}
                   className={`p-3.5 flex gap-3 items-start cursor-pointer transition-all border-l-2 ${
                     isActive 
-                      ? 'bg-[rgba(255,255,255,0.04)] border-accent' 
-                      : 'hover:bg-[rgba(255,255,255,0.01)] border-transparent'
+                      ? 'bg-glass-4 border-accent' 
+                      : 'hover:bg-glass-1 border-transparent'
                   }`}
                 >
                   {/* Avatar de Contato */}
-                  <div className="h-10 w-10 rounded-lg bg-[rgba(255,255,255,0.03)] border border-border-subtle flex items-center justify-center text-text-secondary font-bold text-xs flex-shrink-0">
+                  <div className="h-10 w-10 rounded-lg bg-glass-3 border border-border-subtle flex items-center justify-center text-text-secondary font-bold text-xs flex-shrink-0">
                     {chat.name.substring(0, 2).toUpperCase()}
                   </div>
 
@@ -424,7 +424,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                     </p>
 
                     <div className="flex items-center justify-between pt-1">
-                      <span className="text-[8px] px-1 bg-[rgba(255,255,255,0.05)] border border-border-subtle text-text-tertiary rounded">
+                      <span className="text-[8px] px-1 bg-glass-5 border border-border-subtle text-text-tertiary rounded">
                         via {chat.instance.name}
                       </span>
                       {isLeadLinked ? (
@@ -433,7 +433,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                           Lead
                         </span>
                       ) : (
-                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-[rgba(255,255,255,0.02)] border border-border-subtle text-text-tertiary font-medium">
+                        <span className="text-[8px] px-1.5 py-0.5 rounded bg-glass-2 border border-border-subtle text-text-tertiary font-medium">
                           Não vinculado
                         </span>
                       )}
@@ -447,11 +447,11 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
       </div>
 
       {/* 2. PAINEL DIREITO: ÁREA DE MENSAGENS */}
-      <div className="flex-1 flex flex-col bg-[rgba(0,0,0,0.2)]">
+      <div className="flex-1 flex flex-col bg-dark-glass-0">
         {activeConversation ? (
           <>
             {/* Header do Chat */}
-            <div className="px-6 py-4 border-b border-border-subtle bg-[rgba(5,5,5,0.2)] backdrop-blur-lg flex justify-between items-center flex-shrink-0">
+            <div className="px-6 py-4 border-b border-border-subtle bg-dark-glass-2 backdrop-blur-lg flex justify-between items-center flex-shrink-0">
               <div className="flex items-center gap-3">
                 <div className="h-9 w-9 rounded-lg bg-accent/15 border border-border-glass flex items-center justify-center text-accent font-bold text-sm">
                   {activeConversation.name.substring(0, 2).toUpperCase()}
@@ -512,7 +512,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                                   key={lead.id}
                                   onClick={() => handleLinkLead(lead.id)}
                                   disabled={isLinking}
-                                  className="w-full text-left p-2 rounded hover:bg-[rgba(255,255,255,0.03)] transition-all flex flex-col gap-0.5 text-xs border border-transparent hover:border-border-subtle"
+                                  className="w-full text-left p-2 rounded hover:bg-glass-3 transition-all flex flex-col gap-0.5 text-xs border border-transparent hover:border-border-subtle"
                                 >
                                   <span className="font-bold text-white">{lead.name}</span>
                                   {lead.company && <span className="text-[9px] text-text-tertiary">{lead.company}</span>}
@@ -619,7 +619,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
             {/* Espaço de Mensagens (Body) */}
             <div 
               ref={messagesContainerRef}
-              className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar bg-[rgba(5,5,5,0.1)]"
+              className="flex-1 overflow-y-auto p-6 space-y-4 custom-scrollbar bg-dark-glass-1"
             >
               {messages.length === 0 ? (
                 <div className="h-full flex items-center justify-center text-text-tertiary text-xs">
@@ -635,8 +635,8 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                     >
                       <div className={`max-w-[70%] rounded-2xl px-4 py-2.5 text-xs shadow-md border ${
                         isOutbound 
-                          ? 'bg-accent/15 border-accent/30 text-white rounded-tr-none' 
-                          : 'bg-[rgba(255,255,255,0.02)] border-border-subtle text-white rounded-tl-none'
+                          ? 'bg-accent/15 border-accent/30 text-text-primary rounded-tr-none' 
+                          : 'bg-glass-2 border-border-subtle text-text-primary rounded-tl-none'
                       }`}>
                         {/* Remetente se for Inbound */}
                         {!isOutbound && msg.senderName && (
@@ -667,10 +667,10 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                         )}
 
                         {msg.messageType === 'DOCUMENT' && (
-                          <div className="flex items-center gap-3 bg-[rgba(255,255,255,0.03)] border border-border-subtle p-2 rounded-lg">
+                          <div className="flex items-center gap-3 bg-glass-3 border border-border-subtle p-2 rounded-lg">
                             <FileIcon className="h-8 w-8 text-accent-light flex-shrink-0" />
                             <div className="min-w-0">
-                              <p className="font-bold text-white truncate max-w-[180px]">{msg.content}</p>
+                              <p className="font-bold text-text-primary truncate max-w-[180px]">{msg.content}</p>
                               <a 
                                 href={msg.mediaUrl || '#'} 
                                 download={msg.content}
@@ -722,7 +722,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
             )}
 
             {/* Input Footer */}
-            <div className="p-4 border-t border-border-subtle bg-[rgba(5,5,5,0.2)] backdrop-blur-lg flex-shrink-0">
+            <div className="p-4 border-t border-border-subtle bg-dark-glass-2 backdrop-blur-lg flex-shrink-0">
               <form onSubmit={handleSendMessage} className="flex items-center gap-3 max-w-4xl mx-auto relative">
                 
                 {/* Inputs invisíveis de arquivo */}
@@ -745,7 +745,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                   <button
                     type="button"
                     onClick={() => setShowAttachments(!showAttachments)}
-                    className="p-2.5 rounded-lg bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.05)] border border-border-subtle text-text-secondary hover:text-white transition-all cursor-pointer"
+                    className="p-2.5 rounded-lg bg-glass-2 hover:bg-glass-5 border border-border-subtle text-text-secondary hover:text-white transition-all cursor-pointer"
                   >
                     <Paperclip className="h-4 w-4" />
                   </button>
@@ -755,7 +755,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                       <button
                         type="button"
                         onClick={() => triggerFileInput('IMAGE')}
-                        className="w-full text-left px-3 py-2 text-xs text-text-secondary hover:text-white hover:bg-[rgba(255,255,255,0.03)] rounded-lg transition-all flex items-center gap-2"
+                        className="w-full text-left px-3 py-2 text-xs text-text-secondary hover:text-white hover:bg-glass-3 rounded-lg transition-all flex items-center gap-2"
                       >
                         <ImageIcon className="h-4 w-4 text-accent" />
                         Enviar Imagem
@@ -763,7 +763,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                       <button
                         type="button"
                         onClick={() => triggerFileInput('AUDIO')}
-                        className="w-full text-left px-3 py-2 text-xs text-text-secondary hover:text-white hover:bg-[rgba(255,255,255,0.03)] rounded-lg transition-all flex items-center gap-2"
+                        className="w-full text-left px-3 py-2 text-xs text-text-secondary hover:text-white hover:bg-glass-3 rounded-lg transition-all flex items-center gap-2"
                       >
                         <AudioIcon className="h-4 w-4 text-accent" />
                         Enviar Áudio
@@ -771,7 +771,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                       <button
                         type="button"
                         onClick={() => triggerFileInput('DOCUMENT')}
-                        className="w-full text-left px-3 py-2 text-xs text-text-secondary hover:text-white hover:bg-[rgba(255,255,255,0.03)] rounded-lg transition-all flex items-center gap-2"
+                        className="w-full text-left px-3 py-2 text-xs text-text-secondary hover:text-white hover:bg-glass-3 rounded-lg transition-all flex items-center gap-2"
                       >
                         <FileIcon className="h-4 w-4 text-accent" />
                         Enviar Documento
@@ -808,7 +808,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
         ) : (
           /* Estado Vazio */
           <div className="flex-1 flex flex-col items-center justify-center p-8 text-center space-y-4">
-            <div className="h-16 w-16 rounded-2xl bg-[rgba(255,255,255,0.01)] border border-border-subtle flex items-center justify-center text-text-tertiary">
+            <div className="h-16 w-16 rounded-2xl bg-glass-1 border border-border-subtle flex items-center justify-center text-text-tertiary">
               <MessageSquare className="h-8 w-8" />
             </div>
             <div>
@@ -817,7 +817,7 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                 Selecione uma conversa na lista lateral para visualizar o histórico de mensagens e responder seus leads.
               </p>
             </div>
-            <div className="pt-4 flex justify-center gap-6 text-[10px] text-text-tertiary border-t border-[rgba(255,255,255,0.05)] w-full max-w-md">
+            <div className="pt-4 flex justify-center gap-6 text-[10px] text-text-tertiary border-t border-border-subtle w-full max-w-md">
               <div className="space-y-0.5">
                 <span className="font-semibold text-white block">Decisor</span>
                 <span>Contato chave</span>

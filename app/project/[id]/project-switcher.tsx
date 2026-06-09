@@ -44,7 +44,7 @@ export function ProjectSwitcher({ currentProjectName, currentProjectId, projects
     <div className="relative w-full" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.04)] border border-[rgba(255,255,255,0.06)] hover:border-[rgba(255,255,255,0.12)] rounded-lg text-xs font-semibold text-white cursor-pointer transition-all duration-150"
+        className="w-full flex items-center justify-between gap-2 px-3 py-2 bg-glass-2 hover:bg-glass-4 border border-border-subtle hover:border-[rgba(255,255,255,0.12)] rounded-lg text-xs font-semibold text-white cursor-pointer transition-all duration-150"
       >
         <span className="flex items-center gap-2 truncate">
           <FolderSync className="h-3.5 w-3.5 text-accent flex-shrink-0" />
@@ -62,7 +62,7 @@ export function ProjectSwitcher({ currentProjectName, currentProjectId, projects
               className={`w-full text-left px-3 py-2 text-xs transition-colors duration-100 truncate cursor-pointer flex items-center justify-between ${
                 p.id === currentProjectId
                   ? 'bg-accent/10 text-accent font-semibold'
-                  : 'text-text-secondary hover:text-white hover:bg-[rgba(255,255,255,0.02)]'
+                  : 'text-text-secondary hover:text-white hover:bg-glass-2'
               }`}
             >
               <span className="truncate">{p.name}</span>
