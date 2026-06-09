@@ -8,6 +8,7 @@ import {
   sendWhatsAppMessage, 
   associateLeadToConversation 
 } from '@/app/actions/whatsapp';
+import { createLead } from '@/app/actions/crm';
 import { 
   Send, 
   Paperclip, 
@@ -76,11 +77,18 @@ interface InboxPanelProps {
   initialConversations: Conversation[];
   whatsappInstances: WhatsAppInstance[];
   leads: Lead[];
+  pipelines?: any[];
 }
 
-export function InboxPanel({ projectId, initialConversations, whatsappInstances, leads }: InboxPanelProps) {
+export function InboxPanel({ projectId, initialConversations, whatsappInstances, leads, pipelines = [] }: InboxPanelProps) {
   const [conversations, setConversations] = useState<Conversation[]>(initialConversations);
   const [selectedConversationId, setSelectedConversationId] = useState<string | null>(null);
+  
+  // Estados de criação de leads
+  const [showCreateLeadForm, setShowCreateLeadForm] = useState(false);
+  const [newLeadName, setNewLeadName] = useState('');
+  const [newLeadStageId, setNewLeadStageId] = useState('');
+  const [isCreatingLead, setIsCreatingLead] = useState(false);
   const searchParams = useSearchParams();
   const selectedParam = searchParams?.get('selected') || null;
 
@@ -89,6 +97,40 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
       setSelectedConversationId(selectedParam);
     }
   }, [selectedParam]);
+
+  useEffect(() => {
+    if (pipelines && pipelines.length > 0 && pipelines[0].stages && pipelines[0].stages.length > 0) {
+      setNewLeadStageId(pipelines[0].stages[0].id);
+    }
+  }, [pipelines]);
+
+  const handleCreateAndLinkLead = async () => {
+    if (!newLeadName.trim() || !newLeadStageId || !selectedConversationId) return;
+    setIsCreatingLead(true);
+    try {
+      // 1. Cria o lead no CRM
+      const newLead = await createLead(projectId, {
+        name: newLeadName,
+        phone: activeConversation?.whatsappId,
+        stageId: newLeadStageId
+      });
+      
+      // 2. Vincula à conversa
+      const updated = await associateLeadToConversation(projectId, selectedConversationId, newLead.id);
+      
+      // 3. Atualiza a lista de conversas local
+      setConversations(prev => prev.map(c => c.id === selectedConversationId ? { ...c, leadId: updated.leadId, lead: updated.lead } : c));
+      
+      // 4. Reseta os estados do form
+      setShowCreateLeadForm(false);
+      setNewLeadName('');
+    } catch (err: any) {
+      console.error(err);
+      alert(err.message || 'Erro ao criar lead.');
+    } finally {
+      setIsCreatingLead(false);
+    }
+  };
 
   const [messages, setMessages] = useState<Message[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
@@ -440,49 +482,135 @@ export function InboxPanel({ projectId, initialConversations, whatsappInstances,
                     </button>
                   </div>
                 ) : (
-                  <div className="relative">
-                    {showLeadSelector ? (
-                      <div className="absolute right-0 top-11 bg-bg-elevated border border-border-strong rounded-xl w-64 shadow-2xl p-3 z-30 space-y-2">
-                        <div className="flex justify-between items-center">
-                          <span className="text-[10px] font-bold text-accent uppercase tracking-wider">Vincular a Lead</span>
-                          <button onClick={() => setShowLeadSelector(false)} className="text-text-tertiary hover:text-white">
-                            <X className="h-4 w-4" />
+                  <div className="flex items-center gap-2">
+                    {/* Botão e Popover de Vinculação */}
+                    <div className="relative">
+                      {showLeadSelector ? (
+                        <div className="absolute right-0 top-11 bg-bg-elevated border border-border-strong rounded-xl w-64 shadow-2xl p-3 z-30 space-y-2">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-bold text-accent uppercase tracking-wider">Vincular a Lead</span>
+                            <button 
+                              onClick={() => setShowLeadSelector(false)} 
+                              className="text-text-tertiary hover:text-white"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                          <input
+                            type="text"
+                            placeholder="Buscar lead..."
+                            value={leadSearchQuery}
+                            onChange={(e) => setLeadSearchQuery(e.target.value)}
+                            className="w-full bg-bg-base border border-border-subtle rounded px-2.5 py-1.5 text-xs text-white outline-none"
+                          />
+                          <div className="max-h-40 overflow-y-auto space-y-1 custom-scrollbar">
+                            {filteredLeads.length === 0 ? (
+                              <p className="text-[10px] text-text-tertiary text-center py-2">Nenhum lead ativo.</p>
+                            ) : (
+                              filteredLeads.map(lead => (
+                                <button
+                                  key={lead.id}
+                                  onClick={() => handleLinkLead(lead.id)}
+                                  disabled={isLinking}
+                                  className="w-full text-left p-2 rounded hover:bg-[rgba(255,255,255,0.03)] transition-all flex flex-col gap-0.5 text-xs border border-transparent hover:border-border-subtle"
+                                >
+                                  <span className="font-bold text-white">{lead.name}</span>
+                                  {lead.company && <span className="text-[9px] text-text-tertiary">{lead.company}</span>}
+                                </button>
+                              ))
+                            )}
+                          </div>
+                        </div>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            setShowLeadSelector(true);
+                            setShowCreateLeadForm(false);
+                          }}
+                          className="px-3 py-1.5 bg-emerald-500 hover:bg-emerald-400 text-slate-950 text-xs font-extrabold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-emerald-500/25 border-none"
+                        >
+                          <Link2 className="h-3.5 w-3.5" />
+                          Vincular Lead CRM
+                        </button>
+                      )}
+                    </div>
+
+                    {/* Botão e Popover de Criação de Novo Lead */}
+                    <div className="relative">
+                      {showCreateLeadForm ? (
+                        <div className="absolute right-0 top-11 bg-bg-elevated border border-border-strong rounded-xl w-72 shadow-2xl p-4 z-30 space-y-3">
+                          <div className="flex justify-between items-center">
+                            <span className="text-[10px] font-bold text-accent uppercase tracking-wider">Criar Novo Lead</span>
+                            <button 
+                              onClick={() => setShowCreateLeadForm(false)} 
+                              className="text-text-tertiary hover:text-white"
+                            >
+                              <X className="h-4 w-4" />
+                            </button>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[9px] font-bold text-text-secondary uppercase">Nome do Lead</label>
+                            <input
+                              type="text"
+                              required
+                              placeholder="Nome Completo..."
+                              value={newLeadName}
+                              onChange={(e) => setNewLeadName(e.target.value)}
+                              className="w-full bg-bg-base border border-border-subtle rounded px-2.5 py-1.5 text-xs text-white outline-none focus:border-accent"
+                            />
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[9px] font-bold text-text-secondary uppercase">Funil & Estágio</label>
+                            <select
+                              value={newLeadStageId}
+                              onChange={(e) => setNewLeadStageId(e.target.value)}
+                              className="w-full bg-bg-base border border-border-subtle rounded px-2 py-1.5 text-xs text-white outline-none focus:border-accent"
+                            >
+                              {pipelines?.map(p => (
+                                <optgroup key={p.id} label={p.name} className="bg-bg-elevated text-white">
+                                  {p.stages.map((s: any) => (
+                                    <option key={s.id} value={s.id} className="text-white">
+                                      {s.name}
+                                    </option>
+                                  ))}
+                                </optgroup>
+                              ))}
+                            </select>
+                          </div>
+                          <div className="flex flex-col gap-1">
+                            <label className="text-[9px] font-bold text-text-secondary uppercase">WhatsApp (Automático)</label>
+                            <input
+                              type="text"
+                              disabled
+                              value={activeConversation?.whatsappId}
+                              className="w-full bg-bg-base/50 border border-border-subtle rounded px-2.5 py-1.5 text-xs text-text-tertiary cursor-not-allowed outline-none"
+                            />
+                          </div>
+                          <button
+                            onClick={handleCreateAndLinkLead}
+                            disabled={isCreatingLead || !newLeadName.trim() || !newLeadStageId}
+                            className="w-full py-1.5 bg-accent hover:bg-accent-light text-black font-bold text-xs rounded transition-all cursor-pointer flex items-center justify-center gap-1"
+                          >
+                            {isCreatingLead && <Loader2 className="h-3 w-3 animate-spin" />}
+                            Confirmar e Vincular
                           </button>
                         </div>
-                        <input
-                          type="text"
-                          placeholder="Buscar lead..."
-                          value={leadSearchQuery}
-                          onChange={(e) => setLeadSearchQuery(e.target.value)}
-                          className="w-full bg-bg-base border border-border-subtle rounded px-2.5 py-1.5 text-xs text-white outline-none"
-                        />
-                        <div className="max-h-40 overflow-y-auto space-y-1 custom-scrollbar">
-                          {filteredLeads.length === 0 ? (
-                            <p className="text-[10px] text-text-tertiary text-center py-2">Nenhum lead ativo.</p>
-                          ) : (
-                            filteredLeads.map(lead => (
-                              <button
-                                key={lead.id}
-                                onClick={() => handleLinkLead(lead.id)}
-                                disabled={isLinking}
-                                className="w-full text-left p-2 rounded hover:bg-[rgba(255,255,255,0.03)] transition-all flex flex-col gap-0.5 text-xs border border-transparent hover:border-border-subtle"
-                              >
-                                <span className="font-bold text-white">{lead.name}</span>
-                                {lead.company && <span className="text-[9px] text-text-tertiary">{lead.company}</span>}
-                              </button>
-                            ))
-                          )}
-                        </div>
-                      </div>
-                    ) : (
-                      <button
-                        onClick={() => setShowLeadSelector(true)}
-                        className="px-3 py-1.5 bg-[rgba(255,255,255,0.02)] hover:bg-[rgba(255,255,255,0.05)] border border-border-subtle hover:border-text-secondary text-white text-xs font-bold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <Link2 className="h-3.5 w-3.5 text-text-tertiary" />
-                        Vincular Lead CRM
-                      </button>
-                    )}
+                      ) : (
+                        <button
+                          onClick={() => {
+                            setShowCreateLeadForm(true);
+                            setShowLeadSelector(false);
+                            if (pipelines && pipelines.length > 0 && pipelines[0].stages && pipelines[0].stages.length > 0) {
+                              setNewLeadStageId(pipelines[0].stages[0].id);
+                            }
+                          }}
+                          className="px-3 py-1.5 bg-blue-600 hover:bg-blue-500 text-white text-xs font-extrabold rounded-lg transition-all flex items-center gap-1.5 cursor-pointer shadow-lg shadow-blue-600/20 border-none"
+                        >
+                          <Plus className="h-3.5 w-3.5" />
+                          Criar Lead
+                        </button>
+                      )}
+                    </div>
                   </div>
                 )}
               </div>
