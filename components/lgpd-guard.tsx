@@ -97,52 +97,117 @@ export function LgpdGuard({ children }: { children: React.ReactNode }) {
         <div className="flex-1 overflow-y-auto bg-black/40 border border-border-subtle rounded-xl p-4 md:p-5 mb-6 text-xs md:text-sm text-text-secondary leading-relaxed font-sans max-h-[350px] custom-scrollbar">
           <div className="space-y-4">
             <p className="text-white font-bold uppercase tracking-wider text-xs">
-              POLÍTICA DE PRIVACIDADE E SEGURANÇA DE DADOS (LGPD) — NO FRONT SCALE
+              TERMO DE ACEITE, USO E RESPONSABILIDADE DA PLATAFORMA NO FRONT MONEY
             </p>
             <p>
-              Este Termo de Aceite e Consentimento de Uso de Dados regula a utilização da plataforma de CRM e automação comercial <strong>No Front Scale</strong>, em conformidade com a <strong>Lei Geral de Proteção de Dados Pessoais (LGPD) — Lei nº 13.709/2018</strong>.
+              Ao acessar ou utilizar a plataforma No Front Money, disponível em <a href="https://crm.nofrontscale.com.br/" target="_blank" rel="noopener noreferrer" className="text-accent underline">https://crm.nofrontscale.com.br/</a>, o usuário declara ter lido, compreendido e aceitado integralmente os presentes Termos de Uso e Responsabilidade.
             </p>
             
-            <h3 className="text-white font-semibold text-xs uppercase">1. Coleta e Finalidade do Tratamento de Dados</h3>
+            <h3 className="text-white font-semibold text-xs uppercase">1. OBJETO</h3>
             <p>
-              Como usuário ou operador da plataforma, você está ciente de que coletamos e processamos informações necessárias para a sua identificação e acesso seguro (como nome, endereço de e-mail corporativo e logs de atividade). 
-              Adicionalmente, a plataforma processa informações dos contatos e Leads inseridos no sistema (nomes, telefones, e-mails, históricos de negócios e interações em canais de comunicação). O tratamento desses dados possui a finalidade estrita de:
+              A No Front Money disponibiliza ao usuário uma plataforma tecnológica de gestão de relacionamento com clientes (CRM), destinada ao armazenamento, organização, gerenciamento e acompanhamento de contatos, oportunidades comerciais, negociações, documentos, registros e demais informações inseridas pelo próprio usuário.
+            </p>
+            <p>
+              A plataforma constitui exclusivamente uma ferramenta tecnológica de apoio à gestão comercial, não participando das operações comerciais realizadas pelos usuários nem assumindo qualquer responsabilidade pelos negócios, contratos ou relações jurídicas decorrentes de sua utilização.
+            </p>
+
+            <h3 className="text-white font-semibold text-xs uppercase">2. RESPONSABILIDADE PELOS DADOS INSERIDOS</h3>
+            <p>
+              Todo e qualquer conteúdo inserido na plataforma é de exclusiva responsabilidade do usuário. Incluem-se, sem limitação: Leads; Dados pessoais; Informações comerciais; Documentos; Anotações; Arquivos; Registros de comunicação; Cadastros de clientes; Cadastros de fornecedores; Informações estratégicas ou confidenciais.
+            </p>
+            <p>
+              O usuário declara possuir autorização legal para coletar, armazenar, utilizar e tratar todos os dados inseridos na plataforma, assumindo integral responsabilidade perante terceiros e perante autoridades administrativas ou judiciais.
+            </p>
+            <p>
+              A No Front Money não realiza validação prévia, auditoria, fiscalização ou verificação da origem, autenticidade, licitude, exatidão ou atualização dos dados armazenados pelos usuários.
+            </p>
+
+            <h3 className="text-white font-semibold text-xs uppercase">3. CONFORMIDADE COM A LGPD</h3>
+            <p>
+              Para todos os fins legais, o usuário é considerado o Controlador dos dados pessoais inseridos na plataforma, nos termos da Lei nº 13.709/2018 (LGPD). A No Front Money atua exclusivamente como operadora da infraestrutura tecnológica necessária ao funcionamento do sistema.
+            </p>
+            <p>
+              Compete exclusivamente ao usuário:
             </p>
             <ul className="list-disc pl-4 space-y-1">
-              <li>Viabilizar a gestão do funil de vendas, oportunidades e tarefas comerciais;</li>
-              <li>Permitir o envio de mensagens transacionais e acompanhamentos automatizados;</li>
-              <li>Integrar com gateways de comunicação e APIs externas autorizadas pelo projeto (incluindo automações de WhatsApp via Evolution API).</li>
+              <li>I. Obter consentimentos quando exigidos;</li>
+              <li>II. Definir as bases legais de tratamento;</li>
+              <li>III. Atender solicitações dos titulares dos dados;</li>
+              <li>IV. Garantir a legalidade da coleta e utilização das informações;</li>
+              <li>V. Responder perante autoridades reguladoras e órgãos de fiscalização.</li>
             </ul>
 
-            <h3 className="text-white font-semibold text-xs uppercase">2. Confidencialidade e Medidas de Segurança</h3>
+            <h3 className="text-white font-semibold text-xs uppercase">4. RESPONSABILIDADE PELOS ACESSOS</h3>
             <p>
-              Comprometemo-nos a aplicar medidas de segurança técnicas e administrativas aptas a proteger os dados pessoais de acessos não autorizados e de situações acidentais ou ilícitas de destruição, perda, alteração ou comunicação. 
-              As credenciais de acesso fornecidas (e-mail e senha criptografada) são de uso estritamente pessoal e intransferível, sendo sua obrigação zelar pelo sigilo destas informações.
+              O usuário é integralmente responsável pela gestão dos acessos concedidos à plataforma. São de sua responsabilidade: criação de usuários; compartilhamento de credenciais; revogação de acessos; definição de permissões; utilização adequada das contas cadastradas.
+            </p>
+            <p>
+              Toda ação realizada dentro da conta será presumida como realizada pelo próprio usuário ou por pessoa por ele autorizada.
+            </p>
+            <p>
+              A No Front Money não responderá por acessos indevidos decorrentes de compartilhamento de senhas, falhas internas de segurança do usuário, engenharia social, phishing, vazamento de credenciais ou qualquer outro evento relacionado à administração dos acessos sob responsabilidade do usuário.
             </p>
 
-            <h3 className="text-white font-semibold text-xs uppercase">3. Responsabilidades e Boas Práticas do Usuário</h3>
+            <h3 className="text-white font-semibold text-xs uppercase">5. USO ADEQUADO DA PLATAFORMA</h3>
             <p>
-              Ao utilizar as funcionalidades do CRM e ao interagir com Leads ou clientes, você se obriga a:
+              É vedada a utilização da plataforma para:
             </p>
             <ul className="list-disc pl-4 space-y-1">
-              <li>Tratar os dados dos Leads de acordo com os princípios da boa-fé, finalidade, adequação e necessidade;</li>
-              <li>Não compartilhar informações comerciais confidenciais fora da plataforma sem autorização prévia;</li>
-              <li>Garantir que os contatos inseridos na plataforma possuam uma base legal de consentimento ou interesse legítimo para o recebimento de mensagens e contatos de vendas.</li>
+              <li>I. Atividades ilícitas;</li>
+              <li>II. Armazenamento de conteúdo ilegal;</li>
+              <li>III. Violação de direitos de terceiros;</li>
+              <li>IV. Práticas de spam;</li>
+              <li>V. Tratamento irregular de dados pessoais;</li>
+              <li>VI. Atividades que possam comprometer a estabilidade ou segurança da plataforma.</li>
             </ul>
-
-            <h3 className="text-white font-semibold text-xs uppercase">4. Seus Direitos como Titular</h3>
             <p>
-              Em conformidade com a LGPD, você pode, a qualquer momento, solicitar a confirmação da existência do tratamento, o acesso aos seus dados cadastrais, a correção de dados incompletos ou inexatos, ou a eliminação dos seus dados pessoais tratados mediante requisição expressa ao administrador do seu projeto.
+              A No Front Money poderá suspender ou encerrar imediatamente o acesso de usuários que utilizem a plataforma em desacordo com estes termos ou com a legislação vigente.
             </p>
 
-            <h3 className="text-white font-semibold text-xs uppercase">5. Contato e Esclarecimento de Dúvidas</h3>
+            <h3 className="text-white font-semibold text-xs uppercase">6. DISPONIBILIDADE E MANUTENÇÃO</h3>
             <p>
-              Para exercer seus direitos ou esclarecer quaisquer dúvidas sobre a forma como seus dados são tratados na plataforma, você pode entrar em contato com o nosso Encarregado pelo Tratamento de Dados Pessoais (DPO) através do e-mail oficial: <a href="mailto:contato@nofronscale.com.br" className="text-accent underline">contato@nofronscale.com.br</a>.
+              A No Front Money empregará esforços comercialmente razoáveis para manter a plataforma disponível e operacional. Entretanto, o usuário reconhece que poderão ocorrer interrupções temporárias decorrentes de: atualizações; manutenções preventivas; manutenções corretivas; falhas de conectividade; ataques cibernéticos; eventos de força maior; casos fortuitos.
+            </p>
+            <p>
+              Tais situações não caracterizam inadimplemento contratual nem geram direito a indenizações.
             </p>
 
-            <h3 className="text-white font-semibold text-xs uppercase">6. Consentimento e Vigência</h3>
+            <h3 className="text-white font-semibold text-xs uppercase">7. BACKUP E PRESERVAÇÃO DOS DADOS</h3>
             <p>
-              Ao marcar a caixa de seleção abaixo e clicar em "Aceitar e Continuar", você fornece seu consentimento livre, informado e inequívoco para o tratamento de dados pessoais conforme descrito neste termo, que vigorará por todo o período em que sua conta estiver ativa na plataforma.
+              Embora a No Front Money adote procedimentos de segurança compatíveis com o mercado, recomenda-se que o usuário mantenha cópias próprias das informações consideradas críticas para suas operações. O usuário reconhece que nenhum sistema computacional é absolutamente imune a falhas, indisponibilidades ou incidentes de segurança.
+            </p>
+
+            <h3 className="text-white font-semibold text-xs uppercase">8. LIMITAÇÃO DE RESPONSABILIDADE</h3>
+            <p>
+              Na máxima extensão permitida pela legislação aplicável, a No Front Money não será responsável por:
+            </p>
+            <ul className="list-disc pl-4 space-y-1">
+              <li>I. Perda de negócios;</li>
+              <li>II. Perda de oportunidades comerciais;</li>
+              <li>III. Lucros cessantes;</li>
+              <li>IV. Danos indiretos;</li>
+              <li>V. Danos consequenciais;</li>
+              <li>VI. Perda de receitas;</li>
+              <li>VII. Perda de dados causada por ação do usuário ou de terceiros por ele autorizados;</li>
+              <li>VIII. Utilização inadequada da plataforma;</li>
+              <li>IX. Tratamento irregular de dados pessoais realizado pelo usuário.</li>
+            </ul>
+            <p>
+              A responsabilidade da No Front Money limita-se à disponibilização da infraestrutura tecnológica da plataforma.
+            </p>
+
+            <h3 className="text-white font-semibold text-xs uppercase">9. INDENIZAÇÃO</h3>
+            <p>
+              O usuário compromete-se a defender, indenizar e manter a No Front Money, seus sócios, administradores, colaboradores e parceiros livres de quaisquer reclamações, ações judiciais, processos administrativos, multas, condenações, prejuízos ou despesas decorrentes: dos dados inseridos na plataforma; da violação destes termos; da utilização irregular da ferramenta; do descumprimento da legislação aplicável, especialmente da LGPD.
+            </p>
+
+            <h3 className="text-white font-semibold text-xs uppercase">10. ACEITE</h3>
+            <p>
+              Ao utilizar a plataforma, o usuário declara estar ciente de que a No Front Money atua exclusivamente como fornecedora da infraestrutura tecnológica do sistema, permanecendo sob sua integral responsabilidade os dados armazenados, os acessos concedidos, as operações realizadas e o cumprimento das obsoleta obrigações legais relacionadas à utilização da plataforma.
+            </p>
+            <p>
+              Contato para assuntos relacionados a estes termos:<br />
+              E-mail: <a href="mailto:contato@nofrontscale.com.br" className="text-accent underline">contato@nofrontscale.com.br</a>
             </p>
           </div>
         </div>
