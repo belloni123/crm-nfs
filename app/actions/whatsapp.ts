@@ -97,18 +97,32 @@ export async function createWhatsAppInstance(projectId: string, name: string, ty
           qrcode: true,
           sendPresence: true,
           integration: 'WHATSAPP-BAILEYS',
-          webhook_baileys: {
-            url: `${baseUrl}/api/webhooks/whatsapp`,
-            events: [
-              "MESSAGES_UPSERT",
-              "MESSAGES_UPDATE"
-            ]
-          }
         }),
       });
 
       if (!response.ok) {
         console.error('Falha ao criar instância na Evolution API REST:', await response.text());
+      } else {
+        // Configura o Webhook em uma chamada separada (Evolution API v2)
+        await fetch(`${EVOLUTION_API_URL}/webhook/set/${instanceName}`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'apikey': EVOLUTION_API_KEY,
+          },
+          body: JSON.stringify({
+            webhook: {
+              enabled: true,
+              url: `${baseUrl}/api/webhooks/whatsapp`,
+              byEvents: false,
+              base64: false,
+              events: [
+                "MESSAGES_UPSERT",
+                "MESSAGES_UPDATE"
+              ]
+            }
+          }),
+        });
       }
     } catch (err) {
       console.error('Erro de conexão ao tentar falar com Evolution API:', err);
@@ -297,9 +311,7 @@ export async function sendWhatsAppMessage(
 
       if (messageType === 'TEXT') {
         endpoint = `/message/sendText/${instance.instanceName}`;
-        payload.textMessage = {
-          text: content,
-        };
+        payload.text = content;
       } else {
         endpoint = `/message/sendMedia/${instance.instanceName}`;
         
