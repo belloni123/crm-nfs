@@ -57,6 +57,14 @@ export const authOptions: NextAuthOptions = {
       
       // Permite atualizar a sessão em tempo real se o perfil mudar
       if (trigger === 'update' && session) {
+        // Suporta tanto atualização direta { lgpdAccepted: true }
+        // quanto aninhada { user: { lgpdAccepted: true } }
+        if (session.lgpdAccepted !== undefined) {
+          token.lgpdAccepted = session.lgpdAccepted;
+        }
+        if (session.user?.lgpdAccepted !== undefined) {
+          token.lgpdAccepted = session.user.lgpdAccepted;
+        }
         return { ...token, ...session };
       }
       

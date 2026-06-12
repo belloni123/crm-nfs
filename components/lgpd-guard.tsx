@@ -26,13 +26,11 @@ export function LgpdGuard({ children }: { children: React.ReactNode }) {
       const result = await acceptLgpdTerms();
       if (result.success) {
         // Atualiza a sessão NextAuth localmente com a nova flag lgpdAccepted
-        await update({
-          ...session,
-          user: {
-            ...session?.user,
-            lgpdAccepted: true,
-          }
-        });
+        await update({ lgpdAccepted: true });
+        
+        // Recarrega a página para garantir que todos os Server Components
+        // no servidor leiam e renderizem com a nova sessão atualizada.
+        window.location.reload();
       } else {
         setError('Ocorreu um erro ao processar seu aceite. Tente novamente.');
       }
