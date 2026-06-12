@@ -94,6 +94,16 @@ NEXTAUTH_SECRET="um_hash_md5_ou_string_aleatoria_longa_e_segura"
 # Integração Evolution API (WhatsApp)
 EVOLUTION_API_URL="https://sua-evolution-api.com"
 EVOLUTION_API_KEY="seu_apikey_global_da_evolution_api"
+
+# Configurações de E-mail (Resend ou SMTP)
+# Para usar a API do Resend (Recomendado):
+RESEND_API_KEY="re_..."
+# Para usar um SMTP Customizado (Fallback):
+SMTP_HOST="smtp.seu-servidor.com"
+SMTP_PORT="465"
+SMTP_USER="seu_email@dominio.com"
+SMTP_PASSWORD="sua_senha_segura"
+EMAIL_FROM="Seu Nome <seu_email@dominio.com>"
 ```
 
 ---
@@ -308,8 +318,23 @@ Adicionamos aprimoramentos estéticos modernos e um sistema completo de redefini
 
 ### 2. Recuperação de Senha (Esqueci Minha Senha)
 *   **Transição de Card**: Na tela de login, clicando em "Esqueci minha senha", a caixa de login realiza uma transição suave para o formulário de e-mail de recuperação.
-*   **Simulador de E-mail de Desenvolvimento**: Como não há SMTP ativo localmente, a tela de sucesso exibe uma caixa destacada contendo o link de depuração para testes locais: `http://localhost:3000/reset-password?token=...`.
-*   **Página Pública de Redefinição (`/reset-password`)**: Rota segura que extrai o token da URL, valida a expiração de 1 hora no PostgreSQL, valida a força da senha (mínimo de 6 caracteres), gera o hash `bcryptjs` no servidor e atualiza o usuário no banco de dados.
+*   **Integração de E-mail (Resend/SMTP)**: O sistema suporta o envio nativo de e-mails de recuperação. Se a chave `RESEND_API_KEY` for informada, o e-mail será enviado pela API do Resend. Caso contrário, o envio ocorre via SMTP com as variáveis configuradas (`SMTP_HOST`, etc.). 
+*   **Simulador de E-mail de Desenvolvimento**: Se as variáveis de e-mail não estiverem configuradas localmente, a tela exibirá uma caixa destacada contendo o link de depuração para testes locais: `http://localhost:3000/reset-password?token=...`.
+*   **Página Pública de Redefinição (`/reset-password`)**: Rota segura que extrai o token da URL, valida a expiração de 1 hora no PostgreSQL, valida a força da senha (mínimo de 6 caracteres), gera o hash seguro no servidor e atualiza o usuário no banco de dados.
+
+---
+
+## ⚖️ Conformidade e Privacidade (Termo LGPD)
+
+A plataforma possui um sistema rigoroso de proteção e conformidade de dados, assegurando que as políticas de privacidade sejam aceitas pelos usuários do sistema.
+
+### 1. Interceptação de Primeiro Login
+*   O sistema conta com um verificador de sessão (Middleware/Wrapper) que identifica se o usuário recém-autenticado já consentiu com os Termos de Uso e a Política de Privacidade (LGPD).
+*   Se for o **primeiro acesso** do usuário, ele ficará **bloqueado em uma tela de leitura obrigatória** que exibe o documento na íntegra.
+
+### 2. Auditoria e Persistência de Aceite
+*   Para continuar e utilizar a plataforma, o usuário deve clicar em "Li e Aceito".
+*   Ao confirmar, o sistema persiste essa concordância permanentemente no banco de dados (na tabela de `User`), armazenando a marca de tempo exata (`lgpdAcceptedAt`) de quando o consentimento foi assinado digitalmente, garantindo o registro oficial da aceitação.
 
 
 
