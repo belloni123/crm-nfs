@@ -1,18 +1,18 @@
 @import "tailwindcss";
 
 :root {
-  --bg-base: #091302;
-  --bg-gradient-end: #0f2205; /* Deep Fir gradient base */
-  --bg-elevated: #163300;
-  --bg-card: rgba(159, 232, 112, 0.02);
-  --bg-glass: rgba(159, 232, 112, 0.01);
-  --border-subtle: rgba(159, 232, 112, 0.05);
-  --border-strong: rgba(159, 232, 112, 0.12);
-  --border-glass: rgba(159, 232, 112, 0.18); /* Sulu translucent border */
-  --text-primary: #f2f9ed;
-  --text-secondary: #889c7d;
-  --text-tertiary: #4e5c46;
-  --accent: #9fe870; /* Sulu Neon Green */
+  --bg-base: #0a0a0a; /* Pure deep charcoal black */
+  --bg-gradient-end: #121212; /* Neutral dark gray */
+  --bg-elevated: #1a1a1a; /* Elevated layer/card background */
+  --bg-card: rgba(255, 255, 255, 0.02); /* Translucent neutral card */
+  --bg-glass: rgba(255, 255, 255, 0.01); /* Translucent glass layer */
+  --border-subtle: rgba(255, 255, 255, 0.05); /* Subtle neutral border */
+  --border-strong: rgba(255, 255, 255, 0.12); /* Stronger neutral border */
+  --border-glass: rgba(255, 255, 255, 0.18); /* Translucent border */
+  --text-primary: #f5f5f5; /* Pure neutral off-white */
+  --text-secondary: #a3a3a3; /* Neutral cool gray */
+  --text-tertiary: #525252; /* Neutral dark gray */
+  --accent: #9fe870; /* Sulu Neon Green (kept only for highlights/buttons) */
   --accent-light: #b2f08c;
   --accent-glow: rgba(159, 232, 112, 0.12);
   --danger: #ef4444;
@@ -24,28 +24,28 @@
   --glass-2: rgba(255, 255, 255, 0.02);
   --glass-1: rgba(255, 255, 255, 0.01);
 
-  --dark-glass-4: rgba(5, 5, 5, 0.4);
-  --dark-glass-2: rgba(5, 5, 5, 0.2);
-  --dark-glass-1: rgba(5, 5, 5, 0.1);
+  --dark-glass-4: rgba(10, 10, 10, 0.4);
+  --dark-glass-2: rgba(10, 10, 10, 0.2);
+  --dark-glass-1: rgba(10, 10, 10, 0.1);
   --dark-glass-0: rgba(0, 0, 0, 0.2);
 }
 
 :root[data-theme='light'] {
-  --bg-base: #f3f4f6;
-  --bg-gradient-end: #e5e7eb;
+  --bg-base: #f4f4f5; /* Zinc 100 */
+  --bg-gradient-end: #e4e4e7; /* Zinc 200 */
   --bg-elevated: #ffffff;
   --bg-card: #ffffff;
   --bg-glass: rgba(255, 255, 255, 0.7);
-  --border-subtle: rgba(0, 0, 0, 0.08);
-  --border-strong: rgba(0, 0, 0, 0.16);
-  --border-glass: rgba(74, 102, 73, 0.22);
-  --text-primary: #0f172a;
-  --text-secondary: #334155;
-  --text-tertiary: #64748b;
-  --accent: #2e4a2d;
-  --accent-light: #446643;
-  --accent-glow: rgba(74, 102, 73, 0.08);
-  --danger: #b91c1c;
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-strong: rgba(0, 0, 0, 0.12);
+  --border-glass: rgba(0, 0, 0, 0.15); /* Neutral border in light mode */
+  --text-primary: #09090b; /* Zinc 950 */
+  --text-secondary: #52525b; /* Zinc 600 */
+  --text-tertiary: #71717a; /* Zinc 500 */
+  --accent: #18181b; /* Zinc 900 (Gray/Black theme accent for buttons in light mode) */
+  --accent-light: #27272a; /* Zinc 800 */
+  --accent-glow: rgba(0, 0, 0, 0.06);
+  --danger: #ef4444;
 
   /* Translucent white glass layers for gorgeous, bright elements in Light Mode */
   --glass-5: rgba(255, 255, 255, 0.98);
