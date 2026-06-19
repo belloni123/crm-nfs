@@ -21,7 +21,8 @@ import {
   Sliders,
   AlertCircle,
   FileText,
-  Lock
+  Lock,
+  Calendar
 } from 'lucide-react';
 
 interface HelpContentProps {
@@ -316,6 +317,41 @@ export function HelpContent({ projectId, projectRole, markdown }: HelpContentPro
       notes: [
         'O link de redefinição gerado expira automaticamente em 1 hora por motivos de segurança.',
         'A redefinição usa criptografia de ponta a ponta (bcryptjs) para salvar o novo hash de forma segura no banco de dados PostgreSQL.'
+      ]
+    },
+    {
+      id: 'calendar',
+      title: '8. Integrar Agenda Pessoal',
+      subtitle: 'Como conectar o Google Agenda e Outlook Calendar para sincronizar tarefas.',
+      icon: <Calendar className="h-5 w-5" />,
+      link: {
+        href: `/project/${projectId}/settings?tab=calendar`,
+        label: 'Ir para Minha Agenda',
+        adminOnly: false
+      },
+      steps: [
+        {
+          text: 'No menu lateral esquerdo, clique em Configurações (ícone de engrenagem).',
+        },
+        {
+          text: 'Selecione a aba Minha Agenda (no final do menu lateral de configurações).',
+        },
+        {
+          text: 'Escolha seu provedor e clique em Conectar Google Agenda ou Conectar Outlook Agenda.',
+        },
+        {
+          text: 'Autentique-se e conceda as permissões de acesso ao seu calendário pessoal na tela de consentimento.',
+        },
+        {
+          text: 'Verifique se a conta conectada exibe o status "Integrado" e o e-mail da sua agenda.',
+        },
+        {
+          text: 'Crie uma nova tarefa com data de vencimento no CRM e confirme se ela aparece automaticamente na sua agenda conectada.',
+        }
+      ],
+      notes: [
+        'Cada usuário do CRM tem a sua própria conexão de agenda privada e individual.',
+        'A sincronização é instantânea para criação, edição e exclusão de tarefas.'
       ]
     }
   ], [projectId]);

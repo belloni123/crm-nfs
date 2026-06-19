@@ -130,3 +130,22 @@ Se você ou um membro da equipe esquecer a senha de acesso, a plataforma possui 
    * Clique no botão **Redefinir Senha de Teste** para simular o recebimento do e-mail. Isso abrirá a página segura de redefinição em `/reset-password?token=...`.
 5. Na tela **Criar Nova Senha**, digite a nova senha desejada (mínimo de 6 caracteres) e confirme-a.
 6. Clique em **Salvar Nova Senha**. Após a confirmação, você será redirecionado para a tela de login principal, onde poderá acessar o painel usando suas novas credenciais.
+
+---
+
+## 📅 8. Integração de Agenda Pessoal (Google & Microsoft)
+
+Esta funcionalidade permite que cada vendedor ou administrador conecte sua própria agenda pessoal (Google Calendar ou Microsoft Outlook/Exchange) ao CRM. As tarefas com data de vencimento que você criar ou que forem atribuídas a você serão automaticamente sincronizadas como compromissos/eventos na sua agenda pessoal.
+
+### Passo a Passo:
+1. Acesse o menu **Configurações** (ícone de engrenagem) no menu lateral esquerdo.
+2. Selecione a aba **Minha Agenda** no menu de configurações (disponível para todos os usuários).
+3. Escolha o provedor de sua preferência:
+   * **Google Calendar**: Clique em **Conectar Google Agenda**. Você será redirecionado para a página de login e consentimento do Google. Autorize a plataforma a ler e escrever eventos em sua agenda.
+   * **Outlook Calendar**: Clique em **Conectar Outlook Agenda**. Você será redirecionado para a página de consentimento da Microsoft. Autorize a plataforma.
+4. Após o consentimento, você será redirecionado de volta para as Configurações do CRM, exibindo o status **Integrado** e o e-mail da conta de agenda vinculada.
+5. **Funcionamento da Sincronização:**
+   * Sempre que você criar uma nova tarefa com **data de vencimento**, ela será criada como um evento de 1 hora na sua agenda externa com o título `CRM: [Título da Tarefa]`.
+   * Se você editar o título, descrição, data de vencimento ou se a tarefa for concluída, a alteração será refletida na sua agenda pessoal externa em tempo real.
+   * Se a tarefa for excluída do CRM, o respectivo evento também será removido da sua agenda externa.
+6. Para remover uma integração a qualquer momento, basta acessar novamente a aba **Minha Agenda** e clicar em **Desconectar [Google/Outlook] Agenda**.

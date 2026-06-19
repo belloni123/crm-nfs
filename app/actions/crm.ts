@@ -15,6 +15,7 @@ import crypto from 'crypto';
 import { getPhoneVariants } from '@/lib/utils';
 import bcrypt from 'bcryptjs';
 import { sendPasswordResetEmail } from '@/lib/mail';
+import { syncTaskToAllCalendars } from '@/lib/calendar';
 
 // ==========================================
 // FUNIS E ESTÁGIOS
@@ -983,9 +984,11 @@ export async function createTask(
     dueDate?: string;
     leadId?: string;
     status?: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
+    userId?: string;
   }
 ) {
   const { user } = await requireProjectAccess(projectId);
+  const assigneeId = data.userId || user.id;
 
   const task = await prisma.task.create({
     data: {
@@ -995,6 +998,7 @@ export async function createTask(
       status: data.status || 'PENDING',
       leadId: data.leadId || null,
       projectId,
+      userId: assigneeId,
     },
   });
 
@@ -1007,6 +1011,11 @@ export async function createTask(
         content: `Tarefa criada: "${data.title}".`,
       },
     });
+  }
+
+  // Sincroniza com a agenda
+  if (task.dueDate && task.userId) {
+    await syncTaskToAllCalendars(task.userId, task, 'CREATE');
   }
 
   revalidatePath(`/project/${projectId}`);
@@ -1022,6 +1031,7 @@ export async function updateTask(
     description?: string;
     dueDate?: string | null;
     status?: 'PENDING' | 'IN_PROGRESS' | 'COMPLETED';
+    userId?: string;
   }
 ) {
   const { user } = await requireProjectAccess(projectId);
@@ -1038,6 +1048,7 @@ export async function updateTask(
   if (data.title !== undefined) updateData.title = data.title;
   if (data.description !== undefined) updateData.description = data.description;
   if (data.status !== undefined) updateData.status = data.status;
+  if (data.userId !== undefined) updateData.userId = data.userId;
   if (data.dueDate !== undefined) {
     updateData.dueDate = data.dueDate ? new Date(data.dueDate) : null;
   }
@@ -1058,6 +1069,22 @@ export async function updateTask(
     });
   }
 
+  // Sincroniza com a agenda
+  if (originalTask.userId && originalTask.userId !== task.userId) {
+    // Apaga na agenda do antigo responsável
+    await syncTaskToAllCalendars(originalTask.userId, originalTask, 'DELETE');
+    // Cria na agenda do novo responsável
+    const resetTask = await prisma.task.update({
+      where: { id: taskId },
+      data: { googleEventId: null, microsoftEventId: null },
+    });
+    if (resetTask.userId) {
+      await syncTaskToAllCalendars(resetTask.userId, resetTask, 'CREATE');
+    }
+  } else if (task.userId) {
+    await syncTaskToAllCalendars(task.userId, task, 'UPDATE');
+  }
+
   revalidatePath(`/project/${projectId}`);
   revalidatePath(`/project/${projectId}/tasks`);
   return task;
@@ -1069,6 +1096,11 @@ export async function deleteTask(projectId: string, taskId: string) {
   const task = await prisma.task.findUnique({ where: { id: taskId } });
   if (!task || task.projectId !== projectId) {
     throw new Error('Tarefa não encontrada.');
+  }
+
+  // Sincroniza exclusão na agenda do responsável
+  if (task.userId) {
+    await syncTaskToAllCalendars(task.userId, task, 'DELETE');
   }
 
   await prisma.task.delete({

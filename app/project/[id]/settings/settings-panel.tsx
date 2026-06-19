@@ -28,6 +28,11 @@ import {
   deleteWhatsAppInstance,
   getQRCode
 } from '@/app/actions/whatsapp';
+import {
+  getUserCalendarIntegrations,
+  disconnectCalendarIntegration
+} from '@/app/actions/calendar';
+import { Calendar } from 'lucide-react';
 import { 
   Settings, 
   Layers, 
@@ -192,8 +197,29 @@ export function SettingsPanel({
   initialForms,
 }: SettingsPanelProps) {
   const isAdmin = projectRole === 'PROJECT_ADMIN' || projectRole === 'SUPERADMIN';
-  const [activeTab, setActiveTab] = useState<'funnels' | 'tags' | 'origins' | 'losses' | 'custom' | 'webhooks' | 'whatsapp' | 'comerciais' | 'api' | 'forms' | 'appearance'>(isAdmin ? 'funnels' : 'forms');
+  const [activeTab, setActiveTab] = useState<'funnels' | 'tags' | 'origins' | 'losses' | 'custom' | 'webhooks' | 'whatsapp' | 'comerciais' | 'api' | 'forms' | 'appearance' | 'calendar'>(isAdmin ? 'funnels' : 'forms');
   const [currentTheme, setCurrentTheme] = useState('dark');
+
+  const [calendarStatus, setCalendarStatus] = useState<{
+    google: { connected: boolean; email: string | null };
+    microsoft: { connected: boolean; email: string | null };
+  }>({
+    google: { connected: false, email: null },
+    microsoft: { connected: false, email: null },
+  });
+  const [loadingCalendar, setLoadingCalendar] = useState(false);
+
+  const fetchCalendarIntegrations = React.useCallback(async () => {
+    setLoadingCalendar(true);
+    try {
+      const res = await getUserCalendarIntegrations();
+      setCalendarStatus(res);
+    } catch (err) {
+      console.error('Erro ao buscar integrações de agenda:', err);
+    } finally {
+      setLoadingCalendar(false);
+    }
+  }, []);
 
   React.useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -215,12 +241,18 @@ export function SettingsPanel({
     if (typeof window !== 'undefined') {
       const params = new URLSearchParams(window.location.search);
       const tabParam = params.get('tab');
-      const validTabs = ['funnels', 'tags', 'origins', 'losses', 'custom', 'webhooks', 'whatsapp', 'comerciais', 'api', 'forms', 'appearance'];
+      const validTabs = ['funnels', 'tags', 'origins', 'losses', 'custom', 'webhooks', 'whatsapp', 'comerciais', 'api', 'forms', 'appearance', 'calendar'];
       if (tabParam && validTabs.includes(tabParam)) {
         setActiveTab(tabParam as any);
       }
     }
   }, []);
+
+  React.useEffect(() => {
+    if (activeTab === 'calendar') {
+      fetchCalendarIntegrations();
+    }
+  }, [activeTab, fetchCalendarIntegrations]);
 
   // URL base para os webhooks de entrada e webhook da Evolution
   const baseUrl = typeof window !== 'undefined' ? `${window.location.protocol}//${window.location.host}` : 'http://localhost:3000';
@@ -928,6 +960,7 @@ ${fieldsHtml}
           )}
           <TabButton active={activeTab === 'forms'} onClick={() => setActiveTab('forms')} icon={<FileText className="h-4 w-4" />} label="Formulários" />
           <TabButton active={activeTab === 'appearance'} onClick={() => setActiveTab('appearance')} icon={<Palette className="h-4 w-4" />} label="Aparência" />
+          <TabButton active={activeTab === 'calendar'} onClick={() => setActiveTab('calendar')} icon={<Calendar className="h-4 w-4" />} label="Minha Agenda" />
         </div>
       </div>
 
@@ -2273,6 +2306,139 @@ ${fieldsHtml}
               </div>
             </button>
           </div>
+        </div>
+      )}
+
+      {/* ABA: AGENDA (CALENDAR INTEGRATIONS) */}
+      {activeTab === 'calendar' && (
+        <div className="space-y-6">
+          <div>
+            <h2 className="text-md font-bold text-text-primary font-display mb-1">Minha Agenda Pessoal (Sincronização de Tarefas)</h2>
+            <p className="text-xs text-text-secondary">Conecte sua agenda pessoal para que as tarefas comerciais criadas por você no CRM sejam automaticamente sincronizadas.</p>
+          </div>
+
+          {loadingCalendar ? (
+            <div className="flex items-center justify-center py-12 text-xs text-text-secondary gap-2">
+              <Loader2 className="h-4 w-4 animate-spin text-accent" />
+              Carregando conexões de agenda...
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 pt-2">
+              {/* Card Google Calendar */}
+              <div className="bg-glass-2 border border-border-subtle p-5 rounded-2xl flex flex-col justify-between gap-4">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-9 w-9 bg-blue-600/10 border border-blue-600/25 rounded-xl flex items-center justify-center text-blue-500 font-bold text-sm">
+                        G
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-white">Google Calendar</h4>
+                        <p className="text-[10px] text-text-tertiary">Google Agenda pessoal ou corporativo</p>
+                      </div>
+                    </div>
+
+                    {calendarStatus.google.connected ? (
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-accent/15 border border-accent/25 text-accent">
+                        Integrado
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-glass-3 border border-border-subtle text-text-tertiary">
+                        Desconectado
+                      </span>
+                    )}
+                  </div>
+
+                  {calendarStatus.google.connected && (
+                    <div className="bg-glass-3 border border-border-subtle p-3 rounded-xl flex items-center justify-between">
+                      <div>
+                        <span className="text-[9px] font-bold text-text-tertiary uppercase block">Conta Conectada</span>
+                        <span className="text-xs font-semibold text-white">{calendarStatus.google.email}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {calendarStatus.google.connected ? (
+                  <button
+                    onClick={async () => {
+                      if (confirm('Tem certeza que deseja desconectar o Google Agenda?')) {
+                        await disconnectCalendarIntegration(projectId, 'GOOGLE');
+                        fetchCalendarIntegrations();
+                      }
+                    }}
+                    className="w-full py-2 bg-glass-3 hover:bg-danger/10 border border-border-subtle hover:border-danger/30 text-text-secondary hover:text-danger text-xs font-bold rounded-lg transition-all cursor-pointer"
+                  >
+                    Desconectar Google Agenda
+                  </button>
+                ) : (
+                  <a
+                    href={`/api/integrations/google/auth?projectId=${projectId}`}
+                    className="w-full py-2 bg-blue-600 hover:bg-blue-500 text-white text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-blue-600/10"
+                  >
+                    Conectar Google Agenda
+                  </a>
+                )}
+              </div>
+
+              {/* Card Microsoft Calendar */}
+              <div className="bg-glass-2 border border-border-subtle p-5 rounded-2xl flex flex-col justify-between gap-4">
+                <div className="space-y-3">
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center gap-2">
+                      <div className="h-9 w-9 bg-emerald-600/10 border border-emerald-600/25 rounded-xl flex items-center justify-center text-emerald-500 font-bold text-sm">
+                        M
+                      </div>
+                      <div>
+                        <h4 className="text-xs font-bold text-white">Outlook Calendar</h4>
+                        <p className="text-[10px] text-text-tertiary">Microsoft 365 ou Outlook.com pessoal</p>
+                      </div>
+                    </div>
+
+                    {calendarStatus.microsoft.connected ? (
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-accent/15 border border-accent/25 text-accent">
+                        Integrado
+                      </span>
+                    ) : (
+                      <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-glass-3 border border-border-subtle text-text-tertiary">
+                        Desconectado
+                      </span>
+                    )}
+                  </div>
+
+                  {calendarStatus.microsoft.connected && (
+                    <div className="bg-glass-3 border border-border-subtle p-3 rounded-xl flex items-center justify-between">
+                      <div>
+                        <span className="text-[9px] font-bold text-text-tertiary uppercase block">Conta Conectada</span>
+                        <span className="text-xs font-semibold text-white">{calendarStatus.microsoft.email}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+
+                {calendarStatus.microsoft.connected ? (
+                  <button
+                    onClick={async () => {
+                      if (confirm('Tem certeza que deseja desconectar o Outlook Agenda?')) {
+                        await disconnectCalendarIntegration(projectId, 'MICROSOFT');
+                        fetchCalendarIntegrations();
+                      }
+                    }}
+                    className="w-full py-2 bg-glass-3 hover:bg-danger/10 border border-border-subtle hover:border-danger/30 text-text-secondary hover:text-danger text-xs font-bold rounded-lg transition-all cursor-pointer"
+                  >
+                    Desconectar Outlook Agenda
+                  </button>
+                ) : (
+                  <a
+                    href={`/api/integrations/microsoft/auth?projectId=${projectId}`}
+                    className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-600/10"
+                  >
+                    Conectar Outlook Agenda
+                  </a>
+                )}
+              </div>
+            </div>
+          )}
         </div>
       )}
 
