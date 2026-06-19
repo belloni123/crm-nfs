@@ -13,7 +13,8 @@ export async function GET(request: NextRequest) {
   const errorParam = searchParams.get('error');
 
   const getSettingsUrl = (status: string) => {
-    return `${request.nextUrl.origin}/project/${projectId}/settings?tab=calendar&status=${status}`;
+    const baseUrl = process.env.NEXTAUTH_URL || request.nextUrl.origin;
+    return `${baseUrl}/project/${projectId}/settings?tab=calendar&status=${status}`;
   };
 
   if (errorParam || !code) {
