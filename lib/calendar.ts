@@ -8,7 +8,8 @@ const MICROSOFT_CLIENT_SECRET = process.env.MICROSOFT_CLIENT_SECRET;
 
 // Retorna a URL base dinamicamente se o NEXTAUTH_URL não estiver configurado
 function getAppBaseUrl() {
-  return process.env.NEXTAUTH_URL || 'https://crm.nofrontscale.com.br';
+  const url = process.env.NEXTAUTH_URL || 'https://crm.nofrontscale.com.br';
+  return url.replace(/\/$/, '');
 }
 
 export function getGoogleRedirectUri() {

@@ -102,8 +102,9 @@ export async function GET(request: NextRequest) {
 
     console.log(`[Microsoft Callback] Integração Microsoft salva com sucesso para o usuário ${userId}`);
     return NextResponse.redirect(getSettingsUrl('success'));
-  } catch (error) {
+  } catch (error: any) {
     console.error('[Microsoft Callback] Erro crítico no fluxo de callback:', error);
-    return NextResponse.redirect(getSettingsUrl('error'));
+    const errMsg = error?.message || 'unknown';
+    return NextResponse.redirect(getSettingsUrl(`error&message=${encodeURIComponent(errMsg)}`));
   }
 }
