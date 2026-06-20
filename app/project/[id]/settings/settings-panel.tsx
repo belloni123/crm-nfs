@@ -2382,7 +2382,7 @@ ${fieldsHtml}
               </div>
 
               {/* Card Microsoft Calendar */}
-              <div className="bg-glass-2 border border-border-subtle p-5 rounded-2xl flex flex-col justify-between gap-4">
+              <div className="bg-glass-2 border border-border-subtle p-5 rounded-2xl flex flex-col justify-between gap-4 opacity-50 select-none">
                 <div className="space-y-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -2395,47 +2395,18 @@ ${fieldsHtml}
                       </div>
                     </div>
 
-                    {calendarStatus.microsoft.connected ? (
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-accent/15 border border-accent/25 text-accent">
-                        Integrado
-                      </span>
-                    ) : (
-                      <span className="px-2 py-0.5 rounded-full text-[9px] font-semibold bg-glass-3 border border-border-subtle text-text-tertiary">
-                        Desconectado
-                      </span>
-                    )}
+                    <span className="px-2 py-0.5 rounded-full text-[9px] font-bold bg-blue-600/15 border border-blue-600/25 text-blue-400">
+                      Em breve
+                    </span>
                   </div>
-
-                  {calendarStatus.microsoft.connected && (
-                    <div className="bg-glass-3 border border-border-subtle p-3 rounded-xl flex items-center justify-between">
-                      <div>
-                        <span className="text-[9px] font-bold text-text-tertiary uppercase block">Conta Conectada</span>
-                        <span className="text-xs font-semibold text-white">{calendarStatus.microsoft.email}</span>
-                      </div>
-                    </div>
-                  )}
                 </div>
 
-                {calendarStatus.microsoft.connected ? (
-                  <button
-                    onClick={async () => {
-                      if (confirm('Tem certeza que deseja desconectar o Outlook Agenda?')) {
-                        await disconnectCalendarIntegration(projectId, 'MICROSOFT');
-                        fetchCalendarIntegrations();
-                      }
-                    }}
-                    className="w-full py-2 bg-glass-3 hover:bg-danger/10 border border-border-subtle hover:border-danger/30 text-text-secondary hover:text-danger text-xs font-bold rounded-lg transition-all cursor-pointer"
-                  >
-                    Desconectar Outlook Agenda
-                  </button>
-                ) : (
-                  <a
-                    href={`/api/integrations/microsoft/auth?projectId=${projectId}`}
-                    className="w-full py-2 bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold rounded-lg transition-all flex items-center justify-center gap-2 cursor-pointer shadow-lg shadow-emerald-600/10"
-                  >
-                    Conectar Outlook Agenda
-                  </a>
-                )}
+                <button
+                  disabled
+                  className="w-full py-2 bg-glass-3 border border-border-subtle text-text-tertiary text-xs font-bold rounded-lg cursor-not-allowed"
+                >
+                  Disponível em Breve
+                </button>
               </div>
             </div>
           )}
