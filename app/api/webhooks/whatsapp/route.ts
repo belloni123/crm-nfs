@@ -146,7 +146,7 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    const stablePushName = !isGenericWhatsAppName(pushName, cleanPhone, instance.name) ? pushName : null;
+    const stablePushName = !fromMe && !isGenericWhatsAppName(pushName, cleanPhone, instance.name) ? pushName : null;
     const fallbackContactName = matchedLead?.name || stablePushName;
 
     if (!conversation && fallbackContactName) {
@@ -165,9 +165,7 @@ export async function POST(request: NextRequest) {
     if (!conversation) {
       // Prefer a matched lead or a stable contact name. Some Evolution payloads use non-phone
       // WhatsApp IDs, so the name fallback keeps sent/received messages in one thread.
-      const conversationName = fromMe
-        ? (fallbackContactName || cleanPhone)
-        : (fallbackContactName || cleanPhone);
+      const conversationName = fallbackContactName || cleanPhone;
 
       conversation = await prisma.conversation.create({
         data: {

@@ -41,7 +41,9 @@ async function main() {
 
     for (const conversation of instConversations) {
       const variants = getPhoneVariants(conversation.whatsappId);
+      const canUseNameKey = conversation.leadId || conversation.messages.some((message) => message.direction === 'INBOUND');
       const nameKey =
+        canUseNameKey &&
         !isLikelyBrazilianPhoneId(conversation.whatsappId) &&
         !isGenericWhatsAppName(conversation.name, conversation.whatsappId, instanceName)
           ? normalizeContactName(conversation.name)
@@ -52,7 +54,11 @@ async function main() {
       for (const group of groups) {
         if (
           group.some((groupConversation) => {
+            const canUseGroupNameKey =
+              groupConversation.leadId ||
+              groupConversation.messages.some((message) => message.direction === 'INBOUND');
             const groupNameKey =
+              canUseGroupNameKey &&
               !isLikelyBrazilianPhoneId(groupConversation.whatsappId) &&
               !isGenericWhatsAppName(groupConversation.name, groupConversation.whatsappId, instanceName)
                 ? normalizeContactName(groupConversation.name)
