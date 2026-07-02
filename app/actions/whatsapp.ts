@@ -2,6 +2,7 @@
 
 import { prisma } from '@/lib/prisma';
 import { requireProjectAccess } from '@/lib/security';
+import { getPhoneVariants } from '@/lib/utils';
 import { revalidatePath } from 'next/cache';
 import crypto from 'crypto';
 
@@ -447,11 +448,12 @@ export async function startWhatsAppConversation(projectId: string, leadId: strin
     return { success: false, message: 'Nenhuma conexão de WhatsApp ativa neste projeto. Vá em Configurações > Conexões WhatsApp para conectar.' };
   }
 
-  // 3. Verifica se a conversa já existe
+  // 3. Verifica se a conversa já existe usando variantes do telefone
+  const phoneVariants = getPhoneVariants(cleanPhone);
   let conversation = await prisma.conversation.findFirst({
     where: {
-      whatsappId: cleanPhone,
       instanceId: instance.id,
+      whatsappId: { in: phoneVariants },
     },
   });
 
@@ -475,4 +477,3 @@ export async function startWhatsAppConversation(projectId: string, leadId: strin
 
   return { success: true, conversationId: conversation.id };
 }
-

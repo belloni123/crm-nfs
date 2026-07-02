@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getPhoneVariants } from '@/lib/utils';
+import { getPhoneVariants, isGenericWhatsAppName } from '@/lib/utils';
 
 export async function POST(request: NextRequest) {
   try {
@@ -137,21 +137,42 @@ export async function POST(request: NextRequest) {
       },
     });
 
-    // 3. Encontra ou cria a conversa
-    let conversation = await prisma.conversation.findUnique({
+    // 3. Encontra ou cria a conversa usando variantes do número de telefone
+    const phoneVariants = getPhoneVariants(cleanPhone);
+    let conversation = await prisma.conversation.findFirst({
       where: {
-        whatsappId_instanceId: {
-          whatsappId: cleanPhone,
-          instanceId: instance.id,
-        },
+        instanceId: instance.id,
+        whatsappId: { in: phoneVariants },
       },
     });
 
+    const stablePushName = !isGenericWhatsAppName(pushName, cleanPhone, instance.name) ? pushName : null;
+    const fallbackContactName = matchedLead?.name || stablePushName;
+
+    if (!conversation && fallbackContactName) {
+      conversation = await prisma.conversation.findFirst({
+        where: {
+          instanceId: instance.id,
+          name: {
+            equals: fallbackContactName,
+            mode: 'insensitive',
+          },
+        },
+        orderBy: { lastMessageAt: 'desc' },
+      });
+    }
+
     if (!conversation) {
+      // Prefer a matched lead or a stable contact name. Some Evolution payloads use non-phone
+      // WhatsApp IDs, so the name fallback keeps sent/received messages in one thread.
+      const conversationName = fromMe
+        ? (fallbackContactName || cleanPhone)
+        : (fallbackContactName || cleanPhone);
+
       conversation = await prisma.conversation.create({
         data: {
           whatsappId: cleanPhone,
-          name: pushName || cleanPhone,
+          name: conversationName,
           instanceId: instance.id,
           leadId: matchedLead?.id || null,
         },
@@ -159,8 +180,10 @@ export async function POST(request: NextRequest) {
     } else {
       // Atualiza o nome se tiver e o lead se tiver mudado / encontrado agora
       const updateData: any = { lastMessageAt: new Date() };
-      if (pushName && conversation.name === cleanPhone) {
-        updateData.name = pushName;
+      const isGenericName = isGenericWhatsAppName(conversation.name, conversation.whatsappId, instance.name);
+
+      if (fallbackContactName && isGenericName) {
+        updateData.name = fallbackContactName;
       }
       if (!conversation.leadId && matchedLead) {
         updateData.leadId = matchedLead.id;
