@@ -1,6 +1,6 @@
-# CRM B16 — plataforma de CRM multiprojeto
+# No Front Scale — plataforma de CRM multiprojeto
 
-Aplicação oficial do CRM B16 em Next.js 16, Prisma e PostgreSQL. O produto mantém isolamento por projeto, múltiplos funis, Kanban, leads, tarefas, formulários embutidos, API pública, WhatsApp via Evolution API, campos personalizados tipados e webhooks de entrada e saída.
+Aplicação oficial do No Front Scale em Next.js, Prisma e PostgreSQL. O produto mantém isolamento por projeto, múltiplos funis, Kanban, leads, tarefas, formulários embutidos, API pública, WhatsApp via Evolution API, campos personalizados tipados e webhooks de entrada e saída.
 
 ## Documentação técnica
 
@@ -8,6 +8,7 @@ Aplicação oficial do CRM B16 em Next.js 16, Prisma e PostgreSQL. O produto man
 - [Campos personalizados, webhooks e Kanban](docs/campos-webhooks-kanban.md)
 - [Operação, migrations e rollback](docs/operacao-migrations-rollback.md)
 - [Evidências de QA da entrega de 2026-09-01](docs/qa-release-2026-09-01.md)
+- [Tratamento de erros e acesso negado](docs/tratamento-de-erros.md)
 
 ## Desenvolvimento local
 
@@ -238,9 +239,9 @@ Exemplo de CSS simples para estilização rápida:
 ```
 
 ### 4. Proteção Robusta Contra Spam (Honeypot)
-O código gerado inclui um campo invisível para humanos chamado `b16_hp_website`, escondido por uma regra inline de CSS (`display: none !important;`).
+O código gerado inclui um campo invisível para humanos chamado `nfs_hp_website`, escondido por uma regra inline de CSS (`display: none !important;`).
 *   **Como funciona:** Usuários reais não enxergam esse campo, portanto deixam-no em branco. Robôs/Spambots ignoram regras de CSS e vasculham o código HTML preenchendo todos os campos que encontram na tentativa de enviar propagandas.
-*   **Resposta do CRM:** Quando a API recebe um envio onde o campo `b16_hp_website` está preenchido, o CRM detecta imediatamente que é um bot de spam. O servidor **descarta o envio silenciosamente** (não cria o lead no banco de dados) e devolve uma resposta de sucesso (200 OK ou redirecionamento). Isso engana o bot, fazendo-o pensar que o spam funcionou, evitando que ele tente burlar a segurança por outros meios.
+*   **Resposta do CRM:** Quando a API recebe um envio onde o campo `nfs_hp_website` está preenchido, o CRM detecta imediatamente que é um bot de spam. O servidor **descarta o envio silenciosamente** (não cria o lead no banco de dados) e devolve uma resposta de sucesso (200 OK ou redirecionamento). Isso reduz tentativas automatizadas de burlar a proteção.
 
 ### 5. Rate Limiting por IP
 Para evitar ataques de negação de serviço (DoS) ou inundações de envios (flood), o endpoint público de formulários limita as submissões a **no máximo 10 envios por minuto por endereço IP**. Se ultrapassado, as tentativas adicionais serão bloqueadas com o código de resposta HTTP `429 Too Many Requests`.
@@ -254,11 +255,10 @@ Adicionamos aprimoramentos estéticos modernos e um sistema completo de redefini
 ### 1. Animações High-Tech na Tela de Login
 *   **Glow Neon Pulsante**: Um efeito de luz neon difusa e pulsante atrás da logomarca principal.
 *   **Logo Reveal**: Animação de entrada do logotipo principal com escala suave e desfoque progressivo.
-*   **Tracking Letters Transition**: O título `CRM b16` expande suavemente o espaçamento de suas letras ao carregar a página.
+*   **Tracking Letters Transition**: O título do No Front Scale expande suavemente o espaçamento de suas letras ao carregar a página.
 
 ### 2. Recuperação de Senha (Esqueci Minha Senha)
 *   **Transição de Card**: Na tela de login, clicando em "Esqueci minha senha", a caixa de login realiza uma transição suave para o formulário de e-mail de recuperação.
 *   **Simulador de E-mail de Desenvolvimento**: Como não há SMTP ativo localmente, a tela de sucesso exibe uma caixa destacada contendo o link de depuração para testes locais: `http://localhost:3000/reset-password?token=...`.
 *   **Página Pública de Redefinição (`/reset-password`)**: Rota segura que extrai o token da URL, valida a expiração de 1 hora no PostgreSQL, valida a força da senha (mínimo de 6 caracteres), gera o hash `bcryptjs` no servidor e atualiza o usuário no banco de dados.
-
 

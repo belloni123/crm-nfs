@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import { ErrorScreen } from '@/components/error-screen';
 
 export const metadata: Metadata = {
-  title: 'Página não encontrada — CRM B16',
+  title: 'Página não encontrada — No Front Scale',
 };
 
 export default function NotFoundPage() {

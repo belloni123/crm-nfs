@@ -3,8 +3,8 @@ import { ErrorScreen } from '@/components/error-screen';
 import { getSession } from '@/lib/security';
 
 export const metadata: Metadata = {
-  title: 'Acesso negado — CRM B16',
-  description: 'Sua conta não tem permissão para acessar esta área do CRM B16.',
+  title: 'Acesso negado — No Front Scale',
+  description: 'Sua conta não tem permissão para acessar esta área do No Front Scale.',
 };
 
 interface Props {
@@ -24,7 +24,7 @@ export default async function AccessDeniedPage({ searchParams }: Props) {
       description={isAdminArea
         ? 'Sua conta está ativa, mas não possui o nível de acesso necessário para abrir o painel administrativo.'
         : 'Sua conta está ativa, mas não está vinculada a este projeto ou não possui a permissão necessária.'}
-      guidance="Fale com um administrador do CRM B16 e peça a vinculação ao projeto ou a revisão do seu perfil de acesso."
+      guidance="Fale com um administrador do No Front Scale e peça a vinculação ao projeto ou a revisão do seu perfil de acesso."
       primaryHref={authenticated ? '/project' : '/'}
       primaryLabel={authenticated ? 'Voltar aos meus projetos' : 'Ir para o login'}
       secondaryHref={authenticated ? '/api/auth/signout' : '/'}

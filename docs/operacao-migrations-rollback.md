@@ -1,57 +1,22 @@
 # Operação, migration e rollback
 
-## Estado anterior
+O No Front Scale inicializa com `prisma migrate deploy`. Seed e `prisma db push` não podem ser usados no boot de produção.
 
-O PostgreSQL 15 de produção foi historicamente sincronizado com `prisma db push`; por isso, antes desta entrega, a tabela `_prisma_migrations` não existia. O schema do container e o schema do commit oficial foram comparados antes da mudança.
+## Antes da publicação
 
-## Backup pré-migração
-
-Foi criado um dump PostgreSQL em formato custom dentro do volume persistente, em `manual-backups/crm-b16-pre-20260901T1500.dump`. O catálogo foi validado com `pg_restore -l`, e tamanho e SHA-256 foram conferidos. O checksum deve ser consultado diretamente no servidor, sem copiar credenciais para relatórios.
-
-O backup no mesmo volume protege contra erro lógico, mas não contra perda do servidor/volume. A recomendação operacional P0 é adicionar backup recorrente para armazenamento S3 externo pelo Coolify.
-
-## Ensaio seguro
-
-1. O dump foi restaurado em um banco temporário isolado.
-2. A migration `20260901150000_add_custom_fields_webhooks` foi executada com `ON_ERROR_STOP`.
-3. As contagens críticas de leads, valores personalizados, endpoints e logs foram comparadas e permaneceram idênticas.
-4. O banco temporário foi removido; o dump verificável foi preservado.
-
-## Baseline e deploy
-
-Como as duas migrations antigas já estavam materializadas no schema de produção, elas foram marcadas como aplicadas com `prisma migrate resolve --applied` antes da publicação da imagem cujo boot usa `prisma migrate deploy`. A operação registrou apenas os metadados de `20260606000000_init` e `20260606100000_add_crm_enhancements`, sem executar novamente o SQL antigo. O status foi conferido como atualizado; no deploy, somente a migration nova deve executar.
-
-O container não executa mais seed nem `db push` no boot. O fluxo passa a ser:
-
-1. backup validado;
-2. baseline das migrations históricas, já concluído em 2026-09-01;
-3. `prisma migrate deploy`;
-4. start da aplicação;
-5. healthcheck `/api/health`;
-6. smoke tests e comparação de contagens.
+1. Registre somente contagens das tabelas críticas e verificações de integridade.
+2. Crie um dump PostgreSQL custom; confira catálogo, tamanho e checksum sem expor credenciais.
+3. Restaure o dump em banco isolado e execute `20260901150000_add_custom_fields_webhooks` com falha imediata.
+4. Compare contagens, IDs e vínculos; descarte apenas o banco temporário e preserve o dump validado.
+5. Confirme o baseline das migrations históricas antes do primeiro `migrate deploy` em produção.
+6. Faça o deploy, acompanhe os logs e valide `/api/health`.
 
 ## Rollback
 
-Esta migration é aditiva, salvo por tornar `WebhookEndpoint.targetStageId` opcional e criar índices. O rollback preferencial é de aplicação: redeploy do commit anterior, mantendo as novas colunas no banco. O código anterior ignora essas colunas, evitando perda de dados.
+A migration é aditiva, exceto por tornar `WebhookEndpoint.targetStageId` opcional e por índices. O rollback preferencial é redeploy do commit anterior: ele ignora as colunas novas sem remover dados.
 
-Se houver corrupção lógica comprovada:
+Uma restauração de banco só pode ser considerada após interromper escritas, preservar o estado atual, restaurar em banco separado, comparar registros e receber aprovação explícita. Nunca use `migrate reset`, `DROP`, `TRUNCATE`, recriação de volume ou restauração sobre o banco ativo.
 
-1. interromper escritas;
-2. preservar um segundo dump do estado atual;
-3. restaurar o dump pré-migração em banco separado;
-4. comparar registros e IDs;
-5. somente promover a restauração após aprovação explícita.
+## Após a publicação
 
-Nunca usar `migrate reset`, `drop`, `truncate`, recriar volume ou restaurar por cima do banco em execução.
-
-## Verificações pós-deploy
-
-- migration registrada como aplicada;
-- healthcheck 200;
-- contagens das tabelas críticas iguais ou superiores à linha de base;
-- zero vínculos cruzados entre projetos;
-- login/logout e acesso por papel;
-- listagem, criação, edição e movimentação de lead;
-- reordenação de etapas sem mudar IDs/vínculos;
-- campo personalizado, formulário e webhook de teste;
-- logs de frontend, backend e PostgreSQL sem erro novo.
+Confirme migration concluída, aplicação e PostgreSQL saudáveis, healthcheck 200, contagens preservadas, ausência de vínculos cruzados e smoke tests de login, rota protegida, webhook inválido e 404.

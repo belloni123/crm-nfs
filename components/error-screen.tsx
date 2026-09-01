@@ -72,9 +72,8 @@ export function ErrorScreen({
         <div className="h-1 w-full bg-gradient-to-r from-transparent via-accent to-transparent opacity-80" />
         <div className="p-7 sm:p-10">
           <div className="mb-10 flex items-center justify-between gap-4">
-            <Link href="/" aria-label="Ir para o início do CRM" className="relative block h-9 w-28">
-              <Image src="/logo-white.png" alt="CRM B16" fill sizes="112px" className="logo-theme-white object-contain object-left" priority />
-              <Image src="/logo-dark.png" alt="CRM B16" fill sizes="112px" className="logo-theme-dark object-contain object-left" priority />
+            <Link href="/" aria-label="Ir para o início do No Front Scale" className="block">
+              <Image src="/logo.svg" alt="No Front Scale" width={112} height={36} className="h-9 w-28 object-contain object-left" priority />
             </Link>
             <span className="rounded-full border border-border-subtle bg-glass-3 px-3 py-1 font-mono text-[10px] font-semibold uppercase tracking-[0.2em] text-text-secondary">
               {eyebrow}

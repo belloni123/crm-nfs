@@ -531,7 +531,7 @@ ${optionHtml}
 <form action="${baseUrl}/api/forms/submit/${form.token}" method="POST" class="nfs-form">
   <!-- Honeypot protection field against spam bots -->
   <div style="display: none !important;">
-    <input type="text" name="b16_hp_website" tabindex="-1" autocomplete="off" />
+    <input type="text" name="nfs_hp_website" tabindex="-1" autocomplete="off" />
   </div>
 
   <!-- Hidden tracking fields for campaigns (UTMs) -->
