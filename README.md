@@ -1,110 +1,50 @@
-# No Front Scale — Plataforma de CRM Multiprojeto
+# CRM B16 — plataforma de CRM multiprojeto
 
-Esta é a plataforma de CRM Multiprojeto oficial do **No Front Scale**, um clube privado de empresários focados em escala de negócios. A plataforma foi desenvolvida focando em estética premium (dark mode com glassmorphism), isolamento multi-tenant rígido por projeto (`project_id`), webhooks de entrada dinâmicos com mapeamento JSON e caixa de entrada integrada de WhatsApp conectada à Evolution API.
+Aplicação oficial do CRM B16 em Next.js 16, Prisma e PostgreSQL. O produto mantém isolamento por projeto, múltiplos funis, Kanban, leads, tarefas, formulários embutidos, API pública, WhatsApp via Evolution API, campos personalizados tipados e webhooks de entrada e saída.
 
----
+## Documentação técnica
 
-## 🔑 Credenciais de Acesso Padrão (Seed)
+- [Auditoria e matriz funcional](docs/auditoria-crm-e-matriz.md)
+- [Campos personalizados, webhooks e Kanban](docs/campos-webhooks-kanban.md)
+- [Operação, migrations e rollback](docs/operacao-migrations-rollback.md)
+- [Evidências de QA da entrega de 2026-09-01](docs/qa-release-2026-09-01.md)
 
-Após rodar o script de banco de dados, você poderá efetuar login com os seguintes usuários de teste:
+## Desenvolvimento local
 
-*   **Superadmin (Acesso Global):**
-    *   **E-mail:** `admin@nofrontscale.com.br`
-    *   **Senha:** `admin123`
-*   **Membro de Teste (Acesso ao Projeto 1):**
-    *   **E-mail:** `membro@nofrontscale.com.br`
-    *   **Senha:** `membro123`
+Requisitos: Node.js 20+, npm e PostgreSQL 15+. Não existem credenciais padrão documentadas e o seed nunca deve ser executado em produção.
 
----
-
-## 🛠️ Como Rodar Localmente (Desenvolvimento com PostgreSQL)
-
-Para garantir 100% de consistência com a produção, a plataforma roda exclusivamente com **PostgreSQL** tanto localmente quanto no deploy de produção. O schema do Prisma é fixo para PostgreSQL.
-
-Você pode rodar o PostgreSQL local de duas maneiras: via **Docker** ou nativamente via **Homebrew** no macOS.
-
-### Opção A: Rodar via Docker (Recomendado se tiver Docker instalado)
-1. **Suba apenas o serviço do PostgreSQL no Docker:**
-   ```bash
-   docker-compose up -d postgres
-   ```
-2. **Sincronize as tabelas do banco de dados:**
-   ```bash
-   npx prisma db push
-   ```
-3. **Povoar o banco com os dados iniciais (Seed):**
-   ```bash
-   node prisma/seed.js
-   ```
-4. **Inicie o servidor de desenvolvimento:**
-   ```bash
-   npm run dev
-   ```
-
-### Opção B: Rodar nativamente via Homebrew (Para rodar sem Docker)
-1. **Inicie o serviço do PostgreSQL 15:**
-   ```bash
-   brew services start postgresql@15
-   ```
-2. **Crie o usuário administrador do banco de dados do CRM:**
-   ```bash
-   createuser -s crm_user
-   ```
-3. **Crie o banco de dados oficial:**
-   ```bash
-   createdb -O crm_user nfs_crm
-   ```
-4. **Defina a senha do usuário do banco (deve corresponder ao .env):**
-   ```bash
-   psql -d postgres -c "ALTER USER crm_user WITH PASSWORD 'crm_password_secure_123';"
-   ```
-5. **Sincronize as tabelas e rode o seed:**
-   ```bash
-   npx prisma db push
-   node prisma/seed.js
-   ```
-6. **Inicie o servidor de desenvolvimento:**
-   ```bash
-   npm run dev
-   ```
-
-5. **Acesse o painel:**
-   Abra [http://localhost:3000](http://localhost:3000) (ou a porta exibida no terminal) no seu navegador.
-
----
-
-## 🐳 Configurações e Deploy no Coolify (Produção)
-
-O projeto já está 100% pronto para deploy na sua VPS via Coolify, configurado com Dockerfile multiphase otimizado para Next.js e docker-compose contendo PostgreSQL.
-
-No Coolify, crie um novo recurso de **Docker Compose** apontando para o seu repositório e configure as variáveis de ambiente necessárias.
-
-### Variáveis de Ambiente (`.env`):
-
-Crie um arquivo `.env` na raiz do projeto com as seguintes variáveis:
-
-```env
-# Banco de Dados (PostgreSQL para Produção no Coolify)
-DATABASE_URL="postgresql://postgres:sua_senha_segura@postgres:5432/nofrontcrm?schema=public"
-
-# Configurações do NextAuth
-NEXTAUTH_URL="http://localhost:3000" # Em produção, altere para https://seu-dominio.com
-NEXTAUTH_SECRET="um_hash_md5_ou_string_aleatoria_longa_e_segura"
-
-# Integração Evolution API (WhatsApp)
-EVOLUTION_API_URL="https://sua-evolution-api.com"
-EVOLUTION_API_KEY="seu_apikey_global_da_evolution_api"
-
-# Configurações de E-mail (Resend ou SMTP)
-# Para usar a API do Resend (Recomendado):
-RESEND_API_KEY="re_..."
-# Para usar um SMTP Customizado (Fallback):
-SMTP_HOST="smtp.seu-servidor.com"
-SMTP_PORT="465"
-SMTP_USER="seu_email@dominio.com"
-SMTP_PASSWORD="sua_senha_segura"
-EMAIL_FROM="Seu Nome <seu_email@dominio.com>"
+```bash
+cp .env.example .env
+npm ci --legacy-peer-deps
+npx prisma migrate deploy
+npm run dev
 ```
+
+Para subir o banco pelo Compose, configure primeiro as variáveis obrigatórias do `.env` e execute `docker compose up -d postgres`. Se o Next.js rodar fora do Docker, ajuste o host do `DATABASE_URL` de `postgres` para `localhost`.
+
+Antes de enviar uma alteração:
+
+```bash
+npm test
+npm run lint
+npx prisma validate
+npm run build
+npm audit --omit=dev
+```
+
+## Produção no Coolify
+
+O recurso de produção usa `docker-compose.yml`. O boot executa somente migrations versionadas com `prisma migrate deploy`, inicia o Next.js e expõe o healthcheck em `/api/health`. Não use `prisma db push`, seed, reset ou recriação de volume em produção.
+
+Variáveis obrigatórias:
+
+- `POSTGRES_DB`, `POSTGRES_USER`, `POSTGRES_PASSWORD` e `DATABASE_URL`;
+- `NEXTAUTH_URL` e `NEXTAUTH_SECRET`;
+- `WEBHOOK_ENCRYPTION_KEY`, usada para criptografar headers de webhooks de saída.
+
+Integrações opcionais usam `EVOLUTION_*`, `RESEND_API_KEY`, `MAIL_FROM`, `SMTP_*`, `GOOGLE_*` e `MICROSOFT_*`. Gere segredos longos e aleatórios no gerenciador de variáveis do Coolify; nunca grave valores reais no Git.
+
+O procedimento completo de backup, baseline, migração, verificação e rollback está em [docs/operacao-migrations-rollback.md](docs/operacao-migrations-rollback.md).
 
 ---
 
@@ -167,15 +107,15 @@ A plataforma disponibiliza uma API REST integrada no padrão `/api/v1` para faci
 
 ### 🔐 Geração e Segurança de Chaves de API
 1. Acesse as **Configurações do Projeto > Desenvolvedor & API**.
-2. Clique em **Gerar Chave de API** para gerar um token aleatório seguro (ex: `nfs_test_main_...`).
+2. Clique em **Gerar Chave de API** para gerar um token aleatório seguro (ex: `nfs_...`).
 3. > [!WARNING]
    > **Aviso de Exibição Única**: A chave de API inteira é mostrada **apenas uma vez** em um modal de aviso. Você deve copiá-la e salvá-la imediatamente. Após sair da tela, o CRM nunca mais exibirá a chave original.
 4. **Armazenamento de Alta Segurança**: Por motivos de conformidade e segurança, o CRM realiza o hash da sua chave completa usando `bcrypt` antes de persistir no banco de dados (a chave nunca é guardada legível). O banco armazena apenas o hash (`apiKeyHash`) e os primeiros 12 caracteres (`apiKeyPrefix`) como identificador visual e busca indexada.
 
 ### 🛡️ Autenticação e Rate Limiting
 * **Headers Aceitos**:
-  * `Authorization: Bearer nfs_...` (Recomendado)
-  * `x-api-key: nfs_...`
+  * `Authorization: Bearer <sua_chave>` (Recomendado)
+  * `x-api-key: <sua_chave>`
 * **Rate Limiting Protetivo**: Cada chave de API possui um teto de **60 requisições por minuto**.
   * Requisições que excederem o limite receberão a resposta `429 Too Many Requests` com o cabeçalho `Retry-After` informando os segundos restantes para liberação.
 
@@ -250,31 +190,31 @@ A plataforma possui um **Construtor de Formulários** integrado nas Configuraç�
 ### 3. Customização Visual (CSS)
 O código HTML gerado é cru e limpo, sem estilos embutidos pesados ou iframe. Ele utiliza classes semânticas previsíveis para permitir controle total de design via folha de estilo (CSS) externa do seu site:
 
-*   **`.nfs-form`**: Classe atribuída à tag principal `<form>`.
-*   **`.nfs-field`**: Classe da `<div>` que envolve cada par de rótulo e entrada.
-*   **`.nfs-label`**: Classe aplicada à tag `<label>`.
-*   **`.nfs-input`**: Classe aplicada aos campos `<input>` (texto, número, email).
-*   **`.nfs-button`**: Classe aplicada ao botão `<button type="submit">` de envio.
+*   **`.b16-form`**: Classe atribuída à tag principal `<form>`.
+*   **`.b16-field`**: Classe da `<div>` que envolve cada par de rótulo e entrada.
+*   **`.b16-label`**: Classe aplicada à tag `<label>`.
+*   **`.b16-input`**: Classe aplicada aos campos `<input>` (texto, número, email).
+*   **`.b16-button`**: Classe aplicada ao botão `<button type="submit">` de envio.
 
 Exemplo de CSS simples para estilização rápida:
 ```css
-.nfs-form {
+.b16-form {
   max-width: 400px;
   margin: 0 auto;
   padding: 20px;
   background: #111;
   border-radius: 8px;
 }
-.nfs-field {
+.b16-field {
   margin-bottom: 15px;
 }
-.nfs-label {
+.b16-label {
   display: block;
   color: #fff;
   font-size: 14px;
   margin-bottom: 5px;
 }
-.nfs-input {
+.b16-input {
   width: 100%;
   padding: 8px;
   background: #222;
@@ -282,7 +222,7 @@ Exemplo de CSS simples para estilização rápida:
   color: #fff;
   border-radius: 4px;
 }
-.nfs-button {
+.b16-button {
   width: 100%;
   padding: 10px;
   background-color: #6D8A6C;
@@ -292,15 +232,15 @@ Exemplo de CSS simples para estilização rápida:
   border-radius: 4px;
   cursor: pointer;
 }
-.nfs-button:hover {
+.b16-button:hover {
   background-color: #8BA88A;
 }
 ```
 
 ### 4. Proteção Robusta Contra Spam (Honeypot)
-O código gerado inclui um campo invisível para humanos chamado `nfs_hp_website`, escondido por uma regra inline de CSS (`display: none !important;`).
+O código gerado inclui um campo invisível para humanos chamado `b16_hp_website`, escondido por uma regra inline de CSS (`display: none !important;`).
 *   **Como funciona:** Usuários reais não enxergam esse campo, portanto deixam-no em branco. Robôs/Spambots ignoram regras de CSS e vasculham o código HTML preenchendo todos os campos que encontram na tentativa de enviar propagandas.
-*   **Resposta do CRM:** Quando a API recebe um envio onde o campo `nfs_hp_website` está preenchido, o CRM detecta imediatamente que é um bot de spam. O servidor **descarta o envio silenciosamente** (não cria o lead no banco de dados) e devolve uma resposta de sucesso (200 OK ou redirecionamento). Isso engana o bot, fazendo-o pensar que o spam funcionou, evitando que ele tente burlar a segurança por outros meios.
+*   **Resposta do CRM:** Quando a API recebe um envio onde o campo `b16_hp_website` está preenchido, o CRM detecta imediatamente que é um bot de spam. O servidor **descarta o envio silenciosamente** (não cria o lead no banco de dados) e devolve uma resposta de sucesso (200 OK ou redirecionamento). Isso engana o bot, fazendo-o pensar que o spam funcionou, evitando que ele tente burlar a segurança por outros meios.
 
 ### 5. Rate Limiting por IP
 Para evitar ataques de negação de serviço (DoS) ou inundações de envios (flood), o endpoint público de formulários limita as submissões a **no máximo 10 envios por minuto por endereço IP**. Se ultrapassado, as tentativas adicionais serão bloqueadas com o código de resposta HTTP `429 Too Many Requests`.
@@ -314,28 +254,12 @@ Adicionamos aprimoramentos estéticos modernos e um sistema completo de redefini
 ### 1. Animações High-Tech na Tela de Login
 *   **Glow Neon Pulsante**: Um efeito de luz neon difusa e pulsante atrás da logomarca principal.
 *   **Logo Reveal**: Animação de entrada do logotipo principal com escala suave e desfoque progressivo.
-*   **Tracking Letters Transition**: O título `No Front Money` expande suavemente o espaçamento de suas letras ao carregar a página.
+*   **Tracking Letters Transition**: O título `CRM b16` expande suavemente o espaçamento de suas letras ao carregar a página.
 
 ### 2. Recuperação de Senha (Esqueci Minha Senha)
 *   **Transição de Card**: Na tela de login, clicando em "Esqueci minha senha", a caixa de login realiza uma transição suave para o formulário de e-mail de recuperação.
-*   **Integração de E-mail (Resend/SMTP)**: O sistema suporta o envio nativo de e-mails de recuperação. Se a chave `RESEND_API_KEY` for informada, o e-mail será enviado pela API do Resend. Caso contrário, o envio ocorre via SMTP com as variáveis configuradas (`SMTP_HOST`, etc.). 
-*   **Simulador de E-mail de Desenvolvimento**: Se as variáveis de e-mail não estiverem configuradas localmente, a tela exibirá uma caixa destacada contendo o link de depuração para testes locais: `http://localhost:3000/reset-password?token=...`.
-*   **Página Pública de Redefinição (`/reset-password`)**: Rota segura que extrai o token da URL, valida a expiração de 1 hora no PostgreSQL, valida a força da senha (mínimo de 6 caracteres), gera o hash seguro no servidor e atualiza o usuário no banco de dados.
-
----
-
-## ⚖️ Conformidade e Privacidade (Termo LGPD)
-
-A plataforma possui um sistema rigoroso de proteção e conformidade de dados, assegurando que as políticas de privacidade sejam aceitas pelos usuários do sistema.
-
-### 1. Interceptação de Primeiro Login
-*   O sistema conta com um verificador de sessão (Middleware/Wrapper) que identifica se o usuário recém-autenticado já consentiu com os Termos de Uso e a Política de Privacidade (LGPD).
-*   Se for o **primeiro acesso** do usuário, ele ficará **bloqueado em uma tela de leitura obrigatória** que exibe o documento na íntegra.
-
-### 2. Auditoria e Persistência de Aceite
-*   Para continuar e utilizar a plataforma, o usuário deve clicar em "Li e Aceito".
-*   Ao confirmar, o sistema persiste essa concordância permanentemente no banco de dados (na tabela de `User`), armazenando a marca de tempo exata (`lgpdAcceptedAt`) de quando o consentimento foi assinado digitalmente, garantindo o registro oficial da aceitação.
-
+*   **Simulador de E-mail de Desenvolvimento**: Como não há SMTP ativo localmente, a tela de sucesso exibe uma caixa destacada contendo o link de depuração para testes locais: `http://localhost:3000/reset-password?token=...`.
+*   **Página Pública de Redefinição (`/reset-password`)**: Rota segura que extrai o token da URL, valida a expiração de 1 hora no PostgreSQL, valida a força da senha (mínimo de 6 caracteres), gera o hash `bcryptjs` no servidor e atualiza o usuário no banco de dados.
 
 
 
