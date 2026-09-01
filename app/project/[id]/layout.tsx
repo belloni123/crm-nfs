@@ -1,6 +1,6 @@
 import React from 'react';
-import { redirect } from 'next/navigation';
-import { requireProjectAccess, getSession } from '@/lib/security';
+import { notFound, redirect } from 'next/navigation';
+import { resolveProjectAccess } from '@/lib/security';
 import { prisma } from '@/lib/prisma';
 import Link from 'next/link';
 import { 
@@ -12,8 +12,6 @@ import {
   Settings, 
   Shield, 
   LogOut,
-  FolderSync,
-  ChevronDown,
   HelpCircle
 } from 'lucide-react';
 import { ProjectSwitcher } from './project-switcher';
@@ -27,10 +25,12 @@ interface Props {
 export default async function ProjectLayout({ children, params }: Props) {
   const { id: projectId } = await params;
   
-  // 1. Valida acesso do usuário ao projeto. Se não tiver, lança exceção interceptada pelo middleware/NextAuth
-  const access = await requireProjectAccess(projectId);
-  const session = await getSession();
-  const user = session?.user as { id: string; name?: string; email: string; role: string };
+  // 1. Trata falta de sessão e falta de permissão como estados esperados, sem tela técnica.
+  const access = await resolveProjectAccess(projectId);
+  if (!access.granted) {
+    redirect(access.reason === 'UNAUTHENTICATED' ? '/' : '/acesso-negado?reason=project');
+  }
+  const { user } = access;
 
   // 2. Busca os detalhes do projeto atual
   const currentProject = await prisma.project.findUnique({
@@ -38,7 +38,7 @@ export default async function ProjectLayout({ children, params }: Props) {
   });
 
   if (!currentProject) {
-    redirect('/project');
+    notFound();
   }
 
   // 3. Busca todos os projetos acessíveis pelo usuário para o Workspace Switcher
