@@ -22,9 +22,8 @@ services:
     container_name: nfs-crm-app
     restart: always
     environment:
-      # DATABASE_URL pode ser definida diretamente pelo ambiente. Quando ela não
-      # existir, a imagem a deriva destas mesmas variáveis do Postgres no start.
-      DATABASE_URL: ${DATABASE_URL:-}
+      # DATABASE_URL vem da imagem, alimentada pelo build secret do Coolify. Não
+      # declare uma string vazia aqui: ela sobrescreveria o valor da imagem.
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
       POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}

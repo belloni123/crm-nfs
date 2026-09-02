@@ -21,6 +21,11 @@ RUN npx prisma generate
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
+# O Coolify disponibiliza DATABASE_URL como build secret/argument. Persistimos
+# somente na configuração da imagem para o entrypoint; nenhum segredo fica no Git.
+ARG DATABASE_URL
+ENV DATABASE_URL=$DATABASE_URL
+
 # Expõe a porta que a aplicação roda
 EXPOSE 3000
 
