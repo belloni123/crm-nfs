@@ -124,6 +124,38 @@ async function countLeads(prisma) {
   return row.count;
 }
 
+async function repairKnownLegacyDrift(prisma, state) {
+  const missingColumns = missingFrom(enhancementColumns, state.columnSet);
+
+  if (
+    missingColumns.length === 1 &&
+    missingColumns[0] === "Lead.lostStatusId" &&
+    state.tableSet.has("LostStatus")
+  ) {
+    console.log("Repairing known legacy drift: Lead.lostStatusId");
+    await prisma.$executeRawUnsafe(
+      `ALTER TABLE "Lead" ADD COLUMN IF NOT EXISTS "lostStatusId" TEXT`,
+    );
+    await prisma.$executeRawUnsafe(`
+      DO $$
+      BEGIN
+        IF NOT EXISTS (
+          SELECT 1 FROM pg_constraint WHERE conname = 'Lead_lostStatusId_fkey'
+        ) THEN
+          ALTER TABLE "Lead"
+          ADD CONSTRAINT "Lead_lostStatusId_fkey"
+          FOREIGN KEY ("lostStatusId") REFERENCES "LostStatus"("id")
+          ON DELETE SET NULL ON UPDATE CASCADE;
+        END IF;
+      END
+      $$
+    `);
+    return readDatabaseState(prisma);
+  }
+
+  return state;
+}
+
 async function assertNoUniquenessConflicts(prisma) {
   const duplicateValues = await prisma.$queryRawUnsafe(`
     SELECT 1
@@ -153,19 +185,26 @@ async function main() {
   await prisma.$connect();
 
   const beforeCount = await countLeads(prisma);
-  const state = await readDatabaseState(prisma);
+  let state = await readDatabaseState(prisma);
 
   const missingInitial = missingFrom(initialTables, state.tableSet);
   const missingEnhancementTables = missingFrom(enhancementTables, state.tableSet);
-  const missingEnhancementColumns = missingFrom(enhancementColumns, state.columnSet);
 
-  if (missingInitial.length || missingEnhancementTables.length || missingEnhancementColumns.length) {
+  if (missingInitial.length || missingEnhancementTables.length) {
     throw new Error(
       `Legacy database does not match the expected CRM baseline. Missing artifacts: ${[
         ...missingInitial,
         ...missingEnhancementTables,
-        ...missingEnhancementColumns,
       ].join(", ")}`,
+    );
+  }
+
+  state = await repairKnownLegacyDrift(prisma, state);
+  const missingEnhancementColumns = missingFrom(enhancementColumns, state.columnSet);
+
+  if (missingEnhancementColumns.length) {
+    throw new Error(
+      `Legacy database does not match the expected CRM baseline. Missing artifacts: ${missingEnhancementColumns.join(", ")}`,
     );
   }
 
