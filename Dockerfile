@@ -32,6 +32,6 @@ EXPOSE 3000
 ENV PORT=3000
 ENV NODE_ENV=production
 
-# Aplica somente migrations versionadas. Seed nunca roda automaticamente em produção.
-# Em instalações Compose, DATABASE_URL pode ser derivada das variáveis do Postgres.
-CMD ["sh", "-c", "if [ -z \"$DATABASE_URL\" ]; then export DATABASE_URL=\"$(node scripts/resolve-database-url.js)\"; fi; npx prisma migrate deploy && npm run start"]
+# Faz baseline seguro de bancos legados, aplica somente migrations versionadas e
+# confirma que a quantidade de leads não mudou. Seed nunca roda em produção.
+CMD ["sh", "-c", "if [ -z \"$DATABASE_URL\" ]; then export DATABASE_URL=\"$(node scripts/resolve-database-url.js)\"; fi; node scripts/migrate-production.js && npm run start"]
