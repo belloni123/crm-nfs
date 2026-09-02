@@ -28,4 +28,5 @@ ENV PORT=3000
 ENV NODE_ENV=production
 
 # Aplica somente migrations versionadas. Seed nunca roda automaticamente em produção.
-CMD ["sh", "-c", "npx prisma migrate deploy && npm run start"]
+# Em instalações Compose, DATABASE_URL pode ser derivada das variáveis do Postgres.
+CMD ["sh", "-c", "if [ -z \"$DATABASE_URL\" ]; then export DATABASE_URL=\"$(node scripts/resolve-database-url.js)\"; fi; npx prisma migrate deploy && npm run start"]

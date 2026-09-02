@@ -22,7 +22,12 @@ services:
     container_name: nfs-crm-app
     restart: always
     environment:
-      DATABASE_URL: ${DATABASE_URL}
+      # DATABASE_URL pode ser definida diretamente pelo ambiente. Quando ela não
+      # existir, a imagem a deriva destas mesmas variáveis do Postgres no start.
+      DATABASE_URL: ${DATABASE_URL:-}
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
       NEXTAUTH_URL: ${NEXTAUTH_URL}
       NEXTAUTH_SECRET: ${NEXTAUTH_SECRET}
       WEBHOOK_ENCRYPTION_KEY: ${WEBHOOK_ENCRYPTION_KEY}
